@@ -18,6 +18,11 @@ Claude Barras, Edouard Geoffrois, Zhibiao Wu, and Mark Liberman.
   corpora production.
 \newblock {\em Speech Communication}, 33(1-2):5--22, jan 2001.
 
+\bibitem{Bourlard:1993:CSR:562393}
+Herve~A. Bourlard and Nelson Morgan.
+\newblock {\em Connectionist Speech Recognition: A Hybrid Approach}.
+\newblock Kluwer Academic Publishers, Norwell, MA, USA, 1993.
+
 \bibitem{Chan}
 H.Y. Chan and P.~Woodland.
 \newblock Improving broadcast news transcription by lightly supervised
@@ -89,6 +94,12 @@ Benjamin Lecouteux.
 \newblock Imperfect transcript driven speech recognition.
 \newblock In {\em In: Proceedings of InterSpeech?06. Pitsburg}, 2006.
 
+\bibitem{1406.7806}
+Andrew~L. Maas, Peng Qi, Ziang Xie, Awni~Y. Hannun, Christopher~T. Lengerich,
+  Daniel Jurafsky, and Andrew~Y. Ng.
+\newblock Building dnn acoustic models for large vocabulary speech recognition,
+  2014.
+
 \bibitem{Mathias}
 L.~Mathias, G.~Yegnanarayanan, and J.~Fritsch.
 \newblock Discriminative training of acoustic models applied to domains with
@@ -114,7 +125,7 @@ Vijayaditya Peddinti, Daniel Povey, and Sanjeev Khudanpur.
   long temporal contexts.
 \newblock In {\em INTERSPEECH}, 2015.
 
-\bibitem{Povey_ASRU2011}
+\bibitem{PoveyASRU2011}
 Daniel Povey, Arnab Ghoshal, Gilles Boulianne, Lukas Burget, Ondrej Glembek,
   Nagendra Goel, Mirko Hannemann, Petr Motlicek, Yanmin Qian, Petr Schwarz, Jan
   Silovsky, Georg Stemmer, and Karel Vesely.
@@ -128,6 +139,12 @@ Arik Poznanski and Lior Wolf.
 \newblock {CNN}-n-gram for {HandwritingWord} recognition.
 \newblock In {\em 2016 {IEEE} Conference on Computer Vision and Pattern
   Recognition ({CVPR})}. {IEEE}, jun 2016.
+
+\bibitem{Renals1994}
+S.~Renals, N.~Morgan, H.~Bourlard, M.~Cohen, and H.~Franco.
+\newblock Connectionist probability estimators in {HMM} speech recognition.
+\newblock volume~2, pages 161--174. Institute of Electrical and Electronics
+  Engineers ({IEEE}), jan 1994.
 
 \bibitem{Rosenblatt1960}
 Frank Rosenblatt.

@@ -13,35 +13,38 @@
 \contentsline {subsection}{\numberline {2.1.4}Deep learning for acoustic model}{10}
 \contentsline {subsubsection}{\numberline {2.1.4.1}Feedforward neural network}{10}
 \contentsline {subsubsection}{\numberline {2.1.4.2}Time delay neural network(TDNN)}{11}
-\contentsline {chapter}{\numberline {3}Methodology}{14}
-\contentsline {section}{\numberline {3.1}Data selection: Lightly supervised approach}{14}
-\contentsline {section}{\numberline {3.2}State-of-the-art data selection}{16}
-\contentsline {section}{\numberline {3.3}Data}{18}
-\contentsline {section}{\numberline {3.4}Language model}{19}
-\contentsline {section}{\numberline {3.5}Acoustic model}{19}
-\contentsline {section}{\numberline {3.6}Data selection}{19}
-\contentsline {section}{\numberline {3.7}Baseline model}{19}
-\contentsline {subsection}{\numberline {3.7.1}Acoustic model AM.200 and Language Model Version 1 (LM.200.1e-9)}{19}
-\contentsline {subsection}{\numberline {3.7.2}Acoustic model(AM.200) and Language Model version 3(LM.genres)}{21}
-\contentsline {subsection}{\numberline {3.7.3}Acoustic model AM.100-v1 and Language Model version 1 (LM.200.1e-9)}{21}
-\contentsline {subsubsection}{\numberline {3.7.3.1}100 hours selection(100-v1)}{21}
-\contentsline {subsubsection}{\numberline {3.7.3.2}Training Acoustic model AM.100-v1}{22}
-\contentsline {subsection}{\numberline {3.7.4}The Second Acoustic model(AM.100-v2) and Language Model version 1 (LM.200.1e-9)}{22}
-\contentsline {section}{\numberline {3.8}Comparison}{22}
-\contentsline {chapter}{\numberline {4}Implementation}{26}
-\contentsline {section}{\numberline {4.1}Data set}{26}
-\contentsline {section}{\numberline {4.2}Implementation}{27}
-\contentsline {subsection}{\numberline {4.2.1}Language model}{27}
-\contentsline {subsubsection}{\numberline {4.2.1.1}Library: SRILM}{27}
-\contentsline {subsubsection}{\numberline {4.2.1.2}Execution}{28}
-\contentsline {subsection}{\numberline {4.2.2}Acoustic model}{30}
-\contentsline {subsubsection}{\numberline {4.2.2.1}Library: Kaldi}{30}
-\contentsline {subsubsection}{\numberline {4.2.2.2}Implementation}{31}
-\contentsline {subsection}{\numberline {4.2.3}Recognition}{31}
-\contentsline {subsubsection}{\numberline {4.2.3.1}Data Selection}{31}
-\contentsline {subsubsection}{\numberline {4.2.3.2}Evaluation}{32}
-\contentsline {section}{\numberline {4.3}Experiment resources}{32}
-\contentsline {chapter}{\numberline {5}Sample Title}{33}
-\contentsline {chapter}{\numberline {A}Sample Title}{34}
-\contentsline {chapter}{\numberline {B}Sample Title}{35}
-\contentsline {chapter}{Bibliography}{36}
+\contentsline {subsubsection}{\numberline {2.1.4.3}Hybrid acoustic model}{13}
+\contentsline {chapter}{\numberline {3}Methodology}{15}
+\contentsline {section}{\numberline {3.1}Lightly supervised data selection approach}{15}
+\contentsline {section}{\numberline {3.2}State-of-the-art data selection}{17}
+\contentsline {section}{\numberline {3.3}Data}{19}
+\contentsline {section}{\numberline {3.4}Baseline model}{20}
+\contentsline {subsection}{\numberline {3.4.1}Language model}{20}
+\contentsline {subsection}{\numberline {3.4.2}Acoustic model}{20}
+\contentsline {subsection}{\numberline {3.4.3}Data selection}{20}
+\contentsline {section}{\numberline {3.5}Baseline model}{20}
+\contentsline {section}{\numberline {3.6}Baseline model}{20}
+\contentsline {subsection}{\numberline {3.6.1}Acoustic model AM.200 and Language Model Version 1 (LM.200.1e-9)}{20}
+\contentsline {subsection}{\numberline {3.6.2}Acoustic model(AM.200) and Language Model version 3(LM.genres)}{22}
+\contentsline {subsection}{\numberline {3.6.3}Acoustic model AM.100-v1 and Language Model version 1 (LM.200.1e-9)}{22}
+\contentsline {subsubsection}{\numberline {3.6.3.1}100 hours selection(100-v1)}{22}
+\contentsline {subsubsection}{\numberline {3.6.3.2}Training Acoustic model AM.100-v1}{23}
+\contentsline {subsection}{\numberline {3.6.4}The Second Acoustic model(AM.100-v2) and Language Model version 1 (LM.200.1e-9)}{23}
+\contentsline {section}{\numberline {3.7}Comparison}{23}
+\contentsline {chapter}{\numberline {4}Implementation}{27}
+\contentsline {section}{\numberline {4.1}Data set}{27}
+\contentsline {section}{\numberline {4.2}Experiment setup}{28}
+\contentsline {subsection}{\numberline {4.2.1}Language model}{28}
+\contentsline {subsubsection}{\numberline {4.2.1.1}Library: SRILM}{28}
+\contentsline {subsubsection}{\numberline {4.2.1.2}Execution}{29}
+\contentsline {subsection}{\numberline {4.2.2}Acoustic model}{31}
+\contentsline {subsubsection}{\numberline {4.2.2.1}Library: Kaldi}{31}
+\contentsline {subsubsection}{\numberline {4.2.2.2}Acoustic model implementation}{32}
+\contentsline {subsection}{\numberline {4.2.3}Recognition}{32}
+\contentsline {subsubsection}{\numberline {4.2.3.1}Data Selection}{33}
+\contentsline {subsubsection}{\numberline {4.2.3.2}Evaluation}{33}
+\contentsline {section}{\numberline {4.3}Experiment resources}{34}
+\contentsline {chapter}{\numberline {5}Sample Title}{35}
+\contentsline {chapter}{\numberline {A}Sample Title}{36}
+\contentsline {chapter}{\numberline {B}Sample Title}{37}
+\contentsline {chapter}{Bibliography}{38}

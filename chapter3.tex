@@ -1,6 +1,6 @@
 \chapter{Methodology}
 
-\section{Data selection: Lightly supervised approach}
+\section{Lightly supervised data selection approach}
 Despite of the high development in automatic speech recognition, there exist many challenges. One of the main challenge of speech recognition is to reduce development cost when adapting the speech recognition to other task or creating a new speech recognition for a new language. The biggest development cost is to transcribe the audio data with their exact corresponding transcriptions. To generate a "good" speech recognition, one needs a massive number of training audio and their exact transcriptions. However, transcribing audio is labor intensive and time consuming too. There are unlimited supply of audio data in the internet, television, radio, and other sources. Nonetheless, they usually have a few or even no accurate transcription at all.  Some television broadcasts have corresponding closed captions.  Closed caption means that the transcription is close, but not exactly the same as what the audio says. Even, the closed captions are often badly time-aligned with the audio.
 
 By utilizing these audio data with the corresponding closed captions, we hope to produce a high performance speech recognizer with less supervision. The main idea is to use the automatic speech recognizer to transcribe audio data which will automatically generate transcriptions, which later be used as training data \cite{lightlySupervised}. The steps are as following. Firstly, we train a bootstrap acoustic model trained on a small manually annotated data. Then, recognize the data with closed captions by using the bootstrap model. We compare the decoding result from the bootstrap model with the closed captions and remove the words which do not agree. Finally, we can train a new acoustic model from the filtering.
@@ -53,9 +53,6 @@ A question remains to be asked: when to stop the iteration(the algorithm converg
 
 
 
-
-
-
 \section{Data}
 Before talking about the methodology, it is better to talk about the dataset. We have the following dataset:
 \begin{enumerate}
@@ -67,13 +64,16 @@ Before talking about the methodology, it is better to talk about the dataset. We
 
 
 
-\section{Language model}
+\section{Baseline model}
 
+\subsection{Language model}
 
+\subsection{Acoustic model}
 
-\section{Acoustic model}
+\subsection{Data selection}
 
-\section{Data selection}
+\section{Baseline model}
+
 
 %\textbf{Insert time and perpelexity here.}
 

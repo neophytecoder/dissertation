@@ -45,7 +45,9 @@ news & 61 & 42 & 37 \\ \hline
 
 %Table \ref{statisticstrain200} shows the statistics of each genre in the train.200 training set. 
 
-\section{Implementation}
+\section{Experiment setup}
+In this section, we explained how we did the experiments. First, we elaborated how to build language models,  then the acoustic model, and lastly how to decode the data set for the data selection and the model evaluation.
+
 \subsection{Language model}
 \subsubsection{Library: SRILM}
 SRILM is a toolkit which comprises of a collection of executable programs, which are written in C++, for creating and applying statistical language models for speech recognition and other natural language applications \cite{Stolcke02srilm}. SRILM supports several operations for language model(LM), such as: creating a language model from a text corpus, interpolating several language models into one, pruning a language model, and estimate perplexity of a language model against the test corpus. 
@@ -158,7 +160,7 @@ To build language models we mentioned before, we utilized SRILM. In addition to 
 
 \subsection{Acoustic model}
 \subsubsection{Library: Kaldi}
-Kaldi is a toolkit, written in C++, which comprises several tools which are useful to experiment and build a speech recognition system \cite{Povey_ASRU2011}. Kaldi supports several operations to build a speech recognition system, such as: extracting feature vectors, acoustic modeling, training acoustic models, and creating decoding graph as well as decoding audio inputs into lattices. Kaldi provides several features, such as:
+Kaldi is a toolkit, written in C++, which comprises several tools which are useful to experiment and build a speech recognition system \cite{PoveyASRU2011}. Kaldi supports several operations to build a speech recognition system, such as: extracting feature vectors, acoustic modeling, training acoustic models, and creating decoding graph as well as decoding audio inputs into lattices. Kaldi provides several features, such as:
 \begin{itemize}
 \item It support finite state transducer(FST), which is based on OpenFST library. The FST is used to build a decoding graph with the inputs of acoustic model, language model, and lexicon.
 \item It is extensible and provides complete recipes. Kaldi gives many recipes to build acoustic model, such as: gaussian mixture model, deep neural network, etc.
@@ -166,10 +168,38 @@ Kaldi is a toolkit, written in C++, which comprises several tools which are usef
 \item It has been tested thoroughly to ensure the quality of the library.
 \end{itemize}
 
-\subsubsection{Implementation}
+\subsubsection{Acoustic model implementation}
+%GMM
+Before training the DNN acoustic model, GMM-HMM must be trained first. GMM-HMM is able to perform force alignment on the flat start(without phoneme-to-audio alignment). The labeling of each acoustic input is compulsory to train the TDNN acoustic model. 
+
+We utilized TED-LIUM's recipe(nnet3 in Kaldi) to train the TDNN acoustic model. The feature vector is extracted with MFCC, consisting of 40 feature values. The TDNN architecture has 6 hidden layers, where each hidden unit  utilizes rectified linear unit(RELU) activation function. The TDNN outputs around 9000 output nodes with softmax activation function. Moreover, the TDNN architecture is implemented by leveraging the subsampling technique. Table shows the parameters and subsampling splice configuration we used in the architecture.
+
+\begin{center}
+\captionof{table}{Parameters of  theTDNN acoustic model}
+\label{TDNNparams}
+\begin{tabular}{ | c | c | }
+\hline
+\textbf{Parameter} & \textbf{Method}  \\  \hline \hline
+initial learning rate & 0.0015 \\
+final learning rate & 0.00015 \\ \hline
+mini batch size & 512 \\ \hline
+epoch & 3 \\ \hline
+subsampling splice & \\
+layer 1 & $t-2,t-1,t,t+1,t+2$ \\
+layer 2 & $t-1,t+2$ \\
+layer 3 & $t-3,t+3$ \\
+layer 4 & $t-7,t+2$ \\
+layer 5 & $t-3,t+3$ \\
+layer 6 & $t$ \\  \hline
+\end{tabular}
+\end{center}
+% features
+% architecture
 
 % hyperparameters
-% 
+% -splice
+% -learning rate
+% -training
 
 \subsection{Recognition}
 The last step after training an acoustic model and building a language model is to recognize a data set. The recognition is useful for data selection(computing the new word error rate as well as phone error rate ) and evaluate how good our data selection is. In overall, the recognition(or decoding) process works as following:

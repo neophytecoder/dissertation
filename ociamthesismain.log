@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  5 AUG 2017 16:07
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  5 AUG 2017 23:04
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -634,28 +634,28 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 2.
 (/usr/local/texlive/2016/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-Overfull \hbox (20.74477pt too wide) in paragraph at lines 24--24
+Overfull \hbox (20.74477pt too wide) in paragraph at lines 27--27
  [][] []\OT1/cmr/m/n/12 Acoustic model AM.200 and Lan-guage Model Ver-sion 1 (L
 M.200.1e- 
- []
-
-
-Overfull \hbox (11.67542pt too wide) in paragraph at lines 25--25
- [][] []\OT1/cmr/m/n/12 Acoustic model(AM.200) and Lan-guage Model ver-sion 3(L
-M.genres) [][]  
- []
-
-
-Overfull \hbox (34.78351pt too wide) in paragraph at lines 26--26
- [][] []\OT1/cmr/m/n/12 Acoustic model AM.100-v1 and Lan-guage Model ver-sion 1
- (LM.200.1e- 
  []
 
 [1
 
 
 
-])
+]
+Overfull \hbox (11.67542pt too wide) in paragraph at lines 28--28
+ [][] []\OT1/cmr/m/n/12 Acoustic model(AM.200) and Lan-guage Model ver-sion 3(L
+M.genres) [][]  
+ []
+
+
+Overfull \hbox (34.78351pt too wide) in paragraph at lines 29--29
+ [][] []\OT1/cmr/m/n/12 Acoustic model AM.100-v1 and Lan-guage Model ver-sion 1
+ (LM.200.1e- 
+ []
+
+)
 \tf@toc=\write4
 \openout4 = `ociamthesismain.toc'.
 
@@ -708,20 +708,20 @@ Chapter 2.
 File: pictures/tiphone.png Graphic file (type png)
 
 <use pictures/tiphone.png>
-Package pdftex.def Info: pictures/tiphone.png used on input line 121.
+Package pdftex.def Info: pictures/tiphone.png used on input line 122.
 (pdftex.def)             Requested size: 360.75052pt x 120.45091pt.
  [9 <./pictures/tiphone.png>]
 <pictures/perceptron.png, id=81, 281.05pt x 138.5175pt>
 File: pictures/perceptron.png Graphic file (type png)
 
 <use pictures/perceptron.png>
-Package pdftex.def Info: pictures/perceptron.png used on input line 156.
+Package pdftex.def Info: pictures/perceptron.png used on input line 158.
 (pdftex.def)             Requested size: 168.63129pt x 83.11113pt.
  [10 <./pictures/perceptron.png>]
-<pictures/mlp.png, id=88, 573.14125pt x 221.82875pt>
+<pictures/mlp.png, id=89, 573.14125pt x 221.82875pt>
 File: pictures/mlp.png Graphic file (type png)
  <use pictures/mlp.png>
-Package pdftex.def Info: pictures/mlp.png used on input line 184.
+Package pdftex.def Info: pictures/mlp.png used on input line 186.
 (pdftex.def)             Requested size: 343.8874pt x 133.09825pt.
 
 [11 <./pictures/mlp.png>]
@@ -729,15 +729,15 @@ Package pdftex.def Info: pictures/mlp.png used on input line 184.
 File: pictures/tdnnArchitecture.png Graphic file (type png)
 
 <use pictures/tdnnArchitecture.png>
-Package pdftex.def Info: pictures/tdnnArchitecture.png used on input line 207.
+Package pdftex.def Info: pictures/tdnnArchitecture.png used on input line 209.
 (pdftex.def)             Requested size: 231.86804pt x 297.5138pt.
- [12 <./pictures/tdnnArchitecture.png>])
-[13]
+ [12 <./pictures/tdnnArchitecture.png>]
+[13]) [14]
 \openout2 = `chapter3.aux'.
 
  (./chapter3.tex
 Chapter 3.
-[14
+[15
 
 
 
@@ -747,13 +747,13 @@ Overfull \hbox (6.17822pt too wide) in paragraph at lines 21--22
 an-ual tran-scrip-tion.Detailed
  []
 
-[15] [16] [17] [18]
+[16] [17] [18] [19]
 Overfull \hbox (8.22404pt too wide) in paragraph at lines 90--94
 \OT1/cmr/m/n/12 The lan-guage model used is the LM.200.1e-9 and the acous-tic m
 odel is TDNN.200;
  []
 
-[19]
+[20]
 Overfull \hbox (69.95018pt too wide) in paragraph at lines 105--140
  [] 
  []
@@ -768,19 +768,19 @@ Overfull \hbox (69.95018pt too wide) in paragraph at lines 171--190
  [] 
  []
 
-
+[21]
 Overfull \hbox (72.60205pt too wide) in paragraph at lines 196--218
  [] 
  []
 
-[20] [21] <pictures/awdLineChart.png, id=127, 578.16pt x 433.62pt>
+[22] <pictures/awdLineChart.png, id=131, 578.16pt x 433.62pt>
 File: pictures/awdLineChart.png Graphic file (type png)
 
 <use pictures/awdLineChart.png>
 Package pdftex.def Info: pictures/awdLineChart.png used on input line 377.
 (pdftex.def)             Requested size: 404.70924pt x 303.53192pt.
 
-<pictures/pmerLineChart.jpg, id=128, 1606.0pt x 1204.5pt>
+<pictures/pmerLineChart.jpg, id=132, 1606.0pt x 1204.5pt>
 File: pictures/pmerLineChart.jpg Graphic file (type jpg)
 
 <use pictures/pmerLineChart.jpg>
@@ -791,52 +791,52 @@ Overfull \hbox (48.18373pt too wide) in paragraph at lines 383--385
  [][] 
  []
 
-<pictures/wmerLineChart.jpg, id=129, 1606.0pt x 1204.5pt>
+<pictures/wmerLineChart.jpg, id=133, 1606.0pt x 1204.5pt>
 File: pictures/wmerLineChart.jpg Graphic file (type jpg)
 
 <use pictures/wmerLineChart.jpg>
 Package pdftex.def Info: pictures/wmerLineChart.jpg used on input line 389.
 (pdftex.def)             Requested size: 401.49902pt x 301.12427pt.
-) [22] [23 <./pictures/awdLineChart.png>]
-[24 <./pictures/pmerLineChart.jpg>] [25 <./pictures/wmerLineChart.jpg>]
+) [23] [24 <./pictures/awdLineChart.png>]
+[25 <./pictures/pmerLineChart.jpg>] [26 <./pictures/wmerLineChart.jpg>]
 \openout2 = `chapter4.aux'.
 
 
 (./chapter4.tex
 Chapter 4.
-[26
+[27
 
 
 
-]
-Overfull \hbox (4.80522pt too wide) in paragraph at lines 56--56
+] [28]
+Overfull \hbox (4.80522pt too wide) in paragraph at lines 58--58
 []\OT1/cmtt/m/n/12 ngram-count -order 4 -kndiscount -interpolate -sort -text CO
 RPUS -lm LM[] 
  []
 
-[27] [28]
-Overfull \hbox (16.67952pt too wide) in paragraph at lines 112--114
+[29]
+Overfull \hbox (16.67952pt too wide) in paragraph at lines 114--116
 \OT1/cmr/m/n/12 Eight lan-guage mod-els were gen-er-ated from each genre(LM.doc
 umentary, LM.news,
  []
 
 
-Overfull \hbox (20.41006pt too wide) in paragraph at lines 112--114
+Overfull \hbox (20.41006pt too wide) in paragraph at lines 114--116
 \OT1/cmr/m/n/12 LM.events, LM.drama, LM.competition, LM.comedy, LM.children, an
 d LM.advice).
  []
 
 
-Overfull \hbox (3.50525pt too wide) in paragraph at lines 116--152
+Overfull \hbox (3.50525pt too wide) in paragraph at lines 118--154
  [] 
  []
 
-[29] [30] [31]) [32]
+[30] [31] [32] [33]) [34]
 \openout2 = `conclusions.aux'.
 
  (./conclusions.tex
 Chapter 5.
-) [33
+) [35
 
 
 
@@ -845,7 +845,7 @@ Chapter 5.
 
  (./appendix1.tex
 Appendix A.
-) [34
+) [36
 
 
 
@@ -854,22 +854,22 @@ Appendix A.
 
  (./appendix2.tex
 Appendix B.
-) [35
+) [37
 
 
 
-] (./ociamthesismain.bbl [36
+] (./ociamthesismain.bbl [38
 
 
-] [37]
+] [39]
 Missing character: There is no ç in font cmr12!
 
-Overfull \hbox (87.55473pt too wide) in paragraph at lines 164--168
+Overfull \hbox (87.55473pt too wide) in paragraph at lines 181--185
 []\OT1/cmr/m/n/12 Grid5000 Team.  Grid5000:home.  https://www.grid5000.fr/media
 wiki/index.php/Grid5000:Home,
  []
 
-[38]) [39] (./ociamthesismain.aux (./dedication.aux) (./acknowlegements.aux)
+[40]) [41] (./ociamthesismain.aux (./dedication.aux) (./acknowlegements.aux)
 (./abstract.aux) (./chapter1.aux) (./chapter2.aux) (./chapter3.aux)
 (./chapter4.aux) (./conclusions.aux) (./appendix1.aux) (./appendix2.aux))
 
@@ -877,10 +877,10 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 15016 strings out of 493014
- 287314 string characters out of 6133351
- 339554 words of memory out of 5000000
- 18189 multiletter control sequences out of 15000+600000
+ 15022 strings out of 493014
+ 287407 string characters out of 6133351
+ 335604 words of memory out of 5000000
+ 18195 multiletter control sequences out of 15000+600000
  12192 words of font info for 45 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  55i,10n,54p,1112b,357s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -896,10 +896,10 @@ texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/t
 exlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/tex
 live/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/local/texl
 ive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on ociamthesismain.pdf (48 pages, 950880 bytes).
+Output written on ociamthesismain.pdf (50 pages, 956298 bytes).
 PDF statistics:
- 231 PDF objects out of 1000 (max. 8388607)
- 148 compressed objects within 2 object streams
+ 238 PDF objects out of 1000 (max. 8388607)
+ 153 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
  68 words of extra memory for PDF output out of 10000 (max. 10000000)
 

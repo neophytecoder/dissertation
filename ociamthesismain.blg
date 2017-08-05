@@ -17,48 +17,50 @@ Warning--empty year in Chan
 Warning--empty year in Kemp_unsupervisedtraining
 Warning--empty journal in lightlySupervised
 Warning--empty year in Mathias
+Warning--empty booktitle in Renals1994
+Warning--can't use both volume and number fields in Renals1994
 Warning--empty booktitle in Stolcke02srilm
 Warning--empty booktitle in Waibel:1990:PRU:108235.108263
 Warning--empty booktitle in Zavaliagkos1998UtilizingUT
-You've used 32 entries,
+You've used 35 entries,
             2118 wiz_defined-function locations,
-            722 strings with 10704 characters,
-and the built_in function-call counts, 11527 in all, are:
-= -- 1092
-> -- 599
-< -- 7
-+ -- 243
-- -- 204
-* -- 791
-:= -- 1867
-add.period$ -- 107
-call.type$ -- 32
-change.case$ -- 197
+            738 strings with 11294 characters,
+and the built_in function-call counts, 12738 in all, are:
+= -- 1203
+> -- 678
+< -- 9
++ -- 274
+- -- 232
+* -- 880
+:= -- 2062
+add.period$ -- 116
+call.type$ -- 35
+change.case$ -- 219
 chr.to.int$ -- 0
-cite$ -- 39
-duplicate$ -- 458
-empty$ -- 938
-format.name$ -- 204
-if$ -- 2446
+cite$ -- 44
+duplicate$ -- 499
+empty$ -- 1021
+format.name$ -- 232
+if$ -- 2700
 int.to.chr$ -- 0
-int.to.str$ -- 32
-missing$ -- 30
-newline$ -- 163
-num.names$ -- 64
-pop$ -- 274
+int.to.str$ -- 35
+missing$ -- 33
+newline$ -- 177
+num.names$ -- 70
+pop$ -- 306
 preamble$ -- 1
-purify$ -- 166
+purify$ -- 186
 quote$ -- 0
-skip$ -- 302
+skip$ -- 337
 stack$ -- 0
-substring$ -- 553
-swap$ -- 106
-text.length$ -- 7
+substring$ -- 600
+swap$ -- 120
+text.length$ -- 9
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 126
-warning$ -- 7
-while$ -- 97
-width$ -- 34
-write$ -- 341
-(There were 7 warnings)
+type$ -- 136
+warning$ -- 9
+while$ -- 106
+width$ -- 37
+write$ -- 372
+(There were 9 warnings)
