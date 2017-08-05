@@ -1,0 +1,15 @@
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {1.1}{\ignorespaces automatic speech recognition\relax }}{1}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces A triphone HMM model consisting of three emitting states(beginning(S0), middle(S1), and end(S2) of a phone), a transition matrix $A$, and emission probability(observation likelihood) $B$ \cite {SiliconAM}\relax }}{9}
+\contentsline {figure}{\numberline {2.2}{\ignorespaces A perceptron\relax }}{10}
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Multi layer perceptron\relax }}{11}
+\contentsline {figure}{\numberline {2.4}{\ignorespaces An example of a TDNN architecture. \cite {Peddinti2015ATD}\relax }}{12}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Average word duration\relax }}{23}
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Phone match error rate\relax }}{24}
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Word match error rate\relax }}{25}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }

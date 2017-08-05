@@ -1,0 +1,6 @@
+\begin{abstract}
+
+This internship used 200 hours of speech data and their corresponding closed captions obtained from BBC. However, only closed captions are provided by the challenge. In  other word, the closed captions are not exactly the same as what audio says. Utilizing the whole dataset generates a bad acoustic model owing to imperfect closed captions. Thus, the objective of the internship is to develop a data selection method to obtain a high performance automatic speech recognition(ASR). Simply put, the ASR must reduce word error rate as small as possible.
+
+A baseline system was developed from a 200 hours random subset of whole training set(train.200). Firstly, a deep neural network was trained on the 100 hours subset of data from train.200 and recognized train.200 to calculate phone matched error rate(PMER), word matched error rate(PMER), and average word duration(AWD). The audio segments were sorted and selected based on PMER and AWD for the next iteration. According to our experiments, baseline system shows decreasing trend of word error rate as well as phone matched error rate threshold. Moreover, I proposed a new algorithm which combines three ASR systems by varying language models. These novel approaches are compared with the baseline system to assess whether it achieves better performance.
+\end{abstract}

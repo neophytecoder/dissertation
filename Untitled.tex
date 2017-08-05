@@ -1,0 +1,54 @@
+\documentclass[11pt, oneside]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+\usepackage{geometry}                		% See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   		% ... or a4paper or a5paper or ... 
+%\geometry{landscape}                		% Activate for rotated page geometry
+%\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}				% Use pdf, png, jpg, or eps§ with pdflatex; use eps in DVI mode
+								% TeX will automatically convert eps --> pdf in pdflatex		
+\usepackage{amssymb}
+
+%SetFonts
+
+%SetFonts
+
+
+\title{Brief Article}
+\author{The Author}
+%\date{}							% Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+%\section{}
+%\subsection{}
+
+\begin{center}
+\begin{tabular}{ | c | c | c | }
+\hline
+\textbf{ASR} & \textbf{WER}  & \textbf{PER} \\ \hline \hline
+AM0 + LM.sevenweek+subtitles.1e-9 & 49.5 & 31.8 \\ \hline
+% /talc2/multispeech/calcul/users/jkarsten/mgb/recipe/tools/modifASR/tdnn_s2/recognition_human/recognition_with_scoring_human$ cat decode_res_dev.short_/talc2/multispeech/calcul/users/jkarsten/mgb/recipe/tools/modifASR/tdnn_s2/graph_creation_from_arpaLM/
+%fst+merall_sevenWeekTranscriptions.arpa.subtitles.arpa.lambda0.9.mixed.limitsubtitles+sevenWeek.160k.wlist.arpa.gz.1e-9.arpa_human
+
+
+AM1 + LM.sevenweek+subtitles.1e-9 & 49.9 & 31.6 \\  \hline
+ %/talc2/multispeech/calcul/users/jkarsten/mgb/recipe/tools/modifASR/AM1_s1/tdnn_s2/recognition_human/recognition_with_scoring_human
+ %fst+mer0.33_sevenWeekTranscriptions.arpa.subtitles.arpa.lambda0.9.mixed.limitsubtitles+sevenWeek.160k.wlist.arpa.gz.1e-9.arpa
+ 
+ AM0.limited + LM.sevenweek+subtitles.1e-9 & 49.5 & 33.5 \\ \hline
+%/talc2/multispeech/calcul/users/jkarsten/mgb/recipe/tools/modifASR/tdnn_s2/recognition_human_limited/recognition_with_scoring_human
+%fst+merall_sevenWeekTranscriptions.arpa.subtitles.arpa.lambda0.9.mixed.limitsubtitles+sevenWeek.160k.wlist.arpa.gz.1e-9.arpa_human
+ 
+ AM1.limited + LM.sevenweek+subtitles.1e-9 & 49.9 & 33.4 \\  \hline
+%/talc2/multispeech/calcul/users/jkarsten/mgb/recipe/tools/modifASR/AM1_s1/tdnn_s2/recognition_human_limited/recognition_with_scoring_human/
+%fst+merall_sevenWeekTranscriptions.arpa.subtitles.arpa.lambda0.9.mixed.limitsubtitles+sevenWeek.160k.wlist.arpa.gz.1e-9.arpa
+\end{tabular}
+\end{center}
+
+Threshold:
+\begin{itemize}
+\item To get 60\% of data from AM0(To train AM1): 33.0 PMER 
+\item To get 60\% of data from AM1(To train AM2): 34.07 PMER
+\end{itemize}
+
+
+\end{document}  

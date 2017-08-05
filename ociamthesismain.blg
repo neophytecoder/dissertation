@@ -1,0 +1,64 @@
+This is BibTeX, Version 0.99d (TeX Live 2016)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: ociamthesismain.aux
+A level-1 auxiliary file: dedication.aux
+A level-1 auxiliary file: acknowlegements.aux
+A level-1 auxiliary file: abstract.aux
+A level-1 auxiliary file: chapter1.aux
+A level-1 auxiliary file: chapter2.aux
+A level-1 auxiliary file: chapter3.aux
+A level-1 auxiliary file: chapter4.aux
+A level-1 auxiliary file: conclusions.aux
+A level-1 auxiliary file: appendix1.aux
+A level-1 auxiliary file: appendix2.aux
+The style file: plain.bst
+Database file #1: refs.bib
+Warning--empty year in Chan
+Warning--empty year in Kemp_unsupervisedtraining
+Warning--empty journal in lightlySupervised
+Warning--empty year in Mathias
+Warning--empty booktitle in Stolcke02srilm
+Warning--empty booktitle in Waibel:1990:PRU:108235.108263
+Warning--empty booktitle in Zavaliagkos1998UtilizingUT
+You've used 32 entries,
+            2118 wiz_defined-function locations,
+            722 strings with 10704 characters,
+and the built_in function-call counts, 11527 in all, are:
+= -- 1092
+> -- 599
+< -- 7
++ -- 243
+- -- 204
+* -- 791
+:= -- 1867
+add.period$ -- 107
+call.type$ -- 32
+change.case$ -- 197
+chr.to.int$ -- 0
+cite$ -- 39
+duplicate$ -- 458
+empty$ -- 938
+format.name$ -- 204
+if$ -- 2446
+int.to.chr$ -- 0
+int.to.str$ -- 32
+missing$ -- 30
+newline$ -- 163
+num.names$ -- 64
+pop$ -- 274
+preamble$ -- 1
+purify$ -- 166
+quote$ -- 0
+skip$ -- 302
+stack$ -- 0
+substring$ -- 553
+swap$ -- 106
+text.length$ -- 7
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 126
+warning$ -- 7
+while$ -- 97
+width$ -- 34
+write$ -- 341
+(There were 7 warnings)

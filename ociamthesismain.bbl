@@ -1,0 +1,196 @@
+\begin{thebibliography}{10}
+
+\bibitem{Anden2014}
+Joakim Anden and Stephane Mallat.
+\newblock Deep scattering spectrum.
+\newblock {\em {IEEE} Transactions on Signal Processing}, 62(16):4114--4128,
+  aug 2014.
+
+\bibitem{Bahl:1983:MLA:2053027.2053281}
+Lalit~R. Bahl, Frederick Jelinek, and Robert~L. Mercer.
+\newblock A maximum likelihood approach to continuous speech recognition.
+\newblock {\em IEEE Trans. Pattern Anal. Mach. Intell.}, 5(2):179--190,
+  February 1983.
+
+\bibitem{Barras2001}
+Claude Barras, Edouard Geoffrois, Zhibiao Wu, and Mark Liberman.
+\newblock Transcriber: Development and use of a tool for assisting speech
+  corpora production.
+\newblock {\em Speech Communication}, 33(1-2):5--22, jan 2001.
+
+\bibitem{Chan}
+H.Y. Chan and P.~Woodland.
+\newblock Improving broadcast news transcription by lightly supervised
+  discriminative training.
+\newblock In {\em 2004 {IEEE} International Conference on Acoustics, Speech,
+  and Signal Processing}. {IEEE}.
+
+\bibitem{Hermansky99temporalpatterns}
+Hynek Hermansky and Sangita Sharma.
+\newblock Temporal patterns (traps) in asr of noisy speech.
+\newblock In {\em in Proc. ICASSP}, pages 289--292, 1999.
+
+\bibitem{Jurafsky:2009:SLP:1214993}
+Daniel Jurafsky and James~H. Martin.
+\newblock {\em Speech and Language Processing (2Nd Edition)}.
+\newblock Prentice-Hall, Inc., Upper Saddle River, NJ, USA, 2009.
+
+\bibitem{Kemp_unsupervisedtraining}
+Thomas Kemp and Alex Waibel.
+\newblock Unsupervised training of a speech recognizer: Recent experiments.
+\newblock In {\em in Proc. EUROSPEECH}, pages 2725--2728.
+
+\bibitem{Klakow:2002:TCW:638078.638080}
+Dietrich Klakow and Jochen Peters.
+\newblock Testing the correlation of word error rate and perplexity.
+\newblock {\em Speech Commun.}, 38(1):19--28, September 2002.
+
+\bibitem{Klann2008}
+J.~Klann and P.~Szolovits.
+\newblock An intelligent listening framework for capturing encounter notes from
+  a doctor-patient dialog.
+\newblock In {\em 2008 {IEEE} International Conference on Bioinformatics and
+  Biomeidcine Workshops}. {IEEE}, nov 2008.
+
+\bibitem{KneserNey1993}
+Reinhard Kneser and Hermann Ney.
+\newblock Improved clustering techniques for class-based statistical language
+  modelling.
+\newblock In {\em Third European Conference on Speech Communication and
+  Technology, EUROSPEECH}, September 1993.
+
+\bibitem{Kukich1992}
+Karen Kukich.
+\newblock Technique for automatically correcting words in text.
+\newblock {\em {ACM} Computing Surveys}, 24(4):377--439, dec 1992.
+
+\bibitem{lightlySupervised}
+Lori Lamel, Jean-Luc Gauvain, and G~Adda.
+\newblock Lightly supervised and unsupervised acoustic model training.
+\newblock 16:115--129, 08 2002.
+
+\bibitem{Lanchantin2015}
+P.~Lanchantin, M.~J.~F. Gales, P.~Karanasou, X.~Liu, Y.~Qian, L.~Wang, P.C.
+  Woodland, and C.~Zhang.
+\newblock The development of the cambridge university alignment systems for the
+  multi-genre broadcast challenge.
+\newblock In {\em 2015 {IEEE} Workshop on Automatic Speech Recognition and
+  Understanding ({ASRU})}. {IEEE}, dec 2015.
+
+\bibitem{Lanchantin2016}
+P.~Lanchantin, Mark~J.F. Gales, Penny Karanasou, X.~Liu, Y.~Qian, L.~Wang, P.C.
+  Woodland, and C.~Zhang.
+\newblock Selection of multi-genre broadcast data for the training of automatic
+  speech recognition systems.
+\newblock In {\em Interspeech 2016}. {ISCA}, sep 2016.
+
+\bibitem{Lecouteux06imperfecttranscript}
+Benjamin Lecouteux.
+\newblock Imperfect transcript driven speech recognition.
+\newblock In {\em In: Proceedings of InterSpeech?06. Pitsburg}, 2006.
+
+\bibitem{Mathias}
+L.~Mathias, G.~Yegnanarayanan, and J.~Fritsch.
+\newblock Discriminative training of acoustic models applied to domains with
+  unreliable transcripts.
+\newblock In {\em Proceedings. (ICASSP 05). IEEE International Conference on
+  Acoustics, Speech, and Signal Processing, 2005.} {IEEE}.
+
+\bibitem{Mesgarani04speechdiscrimination}
+Nima Mesgarani, Shihab Shamma, and et~al.
+\newblock Speech discrimination based on multiscale spectro-temporal
+  modulations.
+\newblock In {\em IN PROC. ICASSP}, pages 601--604, 2004.
+
+\bibitem{Patel2010}
+Ibrahim Patel and Y.~Srinivas Rao.
+\newblock Realtime speech processing for automated cue-generation.
+\newblock In {\em 2010 {INTERNATIONAL} {CONFERENCE} {ON} {COMMUNICATION}
+  {CONTROL} {AND} {COMPUTING} {TECHNOLOGIES}}. {IEEE}, oct 2010.
+
+\bibitem{Peddinti2015ATD}
+Vijayaditya Peddinti, Daniel Povey, and Sanjeev Khudanpur.
+\newblock A time delay neural network architecture for efficient modeling of
+  long temporal contexts.
+\newblock In {\em INTERSPEECH}, 2015.
+
+\bibitem{Povey_ASRU2011}
+Daniel Povey, Arnab Ghoshal, Gilles Boulianne, Lukas Burget, Ondrej Glembek,
+  Nagendra Goel, Mirko Hannemann, Petr Motlicek, Yanmin Qian, Petr Schwarz, Jan
+  Silovsky, Georg Stemmer, and Karel Vesely.
+\newblock The kaldi speech recognition toolkit.
+\newblock In {\em IEEE 2011 Workshop on Automatic Speech Recognition and
+  Understanding}. IEEE Signal Processing Society, December 2011.
+\newblock IEEE Catalog No.: CFP11SRW-USB.
+
+\bibitem{Poznanski2016}
+Arik Poznanski and Lior Wolf.
+\newblock {CNN}-n-gram for {HandwritingWord} recognition.
+\newblock In {\em 2016 {IEEE} Conference on Computer Vision and Pattern
+  Recognition ({CVPR})}. {IEEE}, jun 2016.
+
+\bibitem{Rosenblatt1960}
+Frank Rosenblatt.
+\newblock Perceptron simulation experiments.
+\newblock {\em Proceedings of the {IRE}}, 48(3):301--309, mar 1960.
+
+\bibitem{1402.1128}
+Hasim Sak, Andrew Senior, and Françoise Beaufays.
+\newblock Long short-term memory based recurrent neural network architectures
+  for large vocabulary speech recognition, 2014.
+
+\bibitem{Shannon:2001:MTC:584091.584093}
+C.~E. Shannon.
+\newblock A mathematical theory of communication.
+\newblock {\em SIGMOBILE Mob. Comput. Commun. Rev.}, 5(1):3--55, January 2001.
+
+\bibitem{SiliconAM}
+{Silicon Intelligence}.
+\newblock Acoustic model.
+\newblock [Online; accessed July 25, 2017].
+
+\bibitem{Stolcke02srilm}
+Andreas Stolcke.
+\newblock Srilm - an extensible language modeling toolkit.
+\newblock pages 901--904, 2002.
+
+\bibitem{Stolcke00anefficient}
+Andreas Stolcke, Wen Wang, Dimitra Vergyri, Venkata Ramana, Rao Gadde, and Jing
+  Zheng.
+\newblock An efficient repair procedure for quick transcriptions.
+\newblock In {\em in Proc. ICSLP}, pages 1961--1964, 2000.
+
+\bibitem{Grid5000}
+Grid5000 Team.
+\newblock Grid5000:home.
+\newblock https://www.grid5000.fr/mediawiki/index.php/Grid5000:Home, cited
+  August 2017.
+
+\bibitem{Thomas2009}
+Samuel Thomas, Sriram Ganapathy, and Hynek Hermansky.
+\newblock Phoneme recognition using spectral envelope and modulation frequency
+  features.
+\newblock In {\em 2009 {IEEE} International Conference on Acoustics, Speech and
+  Signal Processing}. {IEEE}, apr 2009.
+
+\bibitem{Waibel:1990:PRU:108235.108263}
+Alexander Waibel, Toshiyuki Hanazawa, Geofrey Hinton, Kiyohiro Shikano, and
+  Kevin~J. Lang.
+\newblock Readings in speech recognition.
+\newblock chapter Phoneme Recognition Using Time-delay Neural Networks, pages
+  393--404. Morgan Kaufmann Publishers Inc., San Francisco, CA, USA, 1990.
+
+\bibitem{Woodland2015}
+P.~C. Woodland, X.~Liu, Y.~Qian, C.~Zhang, M.~J.~F. Gales, P.~Karanasou,
+  P.~Lanchantin, and L.~Wang.
+\newblock Cambridge university transcription systems for the multi-genre
+  broadcast challenge.
+\newblock In {\em 2015 {IEEE} Workshop on Automatic Speech Recognition and
+  Understanding ({ASRU})}. {IEEE}, dec 2015.
+
+\bibitem{Zavaliagkos1998UtilizingUT}
+George Zavaliagkos and Thomas Colthurst.
+\newblock Utilizing untranscribed training data to improve performance.
+\newblock 1998.
+
+\end{thebibliography}

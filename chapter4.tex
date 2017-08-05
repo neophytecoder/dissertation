@@ -1,0 +1,206 @@
+\chapter{Implementation}
+
+\section{Data set}
+% cite it here
+For this internship, we used TV broadcasts downloaded from the internet. 
+\begin{itemize}
+\item The audio files are taken from TV broadcasts. Total duration of audio is around 200 hours.
+\item TV broadcast transcriptions(closed captions) of the audio files are provided. The closed captions are close to what the audio says, but not exactly the same as the speakers of the audio said. In addition to the closed captions from 200 hours TV broadcasts, we have the closed captions from 1600 hours of TV broadcasts as well.
+\item 640 million words of TV subtitles are provided. In addition to that, the 640M subtitles are filtered to avoid overlap with the closed captions from the TV broadcasts.
+\end{itemize} 
+
+We prepared two data sets: training set and development set. The training dataset has a total duration of around 200 hours of audio. To evaluate our model, we have a development set. Some metadata are provided in our data, such as: speaker id of the transcript, genre of the show, date and time of the show, as well as television channel where the show was aired. In addition, each segment has start and end time when the segment was shown in the TV broadcast. All files in full training set have closed captions. In contrast, all files in development set have closed captions as well as manually annotated human transcription. The transcript is manually and carefully annotated by human. Thus, the transcript is believed to be the closest transcription spoken by speakers in audio files. 
+
+Table \ref{tab:dataset} shows the statistics of the training set and the development set. The second column represents the number of TV shows in each genre; the third column represents the total duration of each genre. Lastly, the forth column(the last column) shows the total duration of speech when the speakers spoke in the audio.
+\begin{center}
+\label{tab:dataset}
+\captionof{table}{Dataset duration}
+\begin{tabular}{ | c | c | c | c | c |  }
+\hline
+No & Data set & \#shows & Duration(h) & Aligned speech (h) \\ \hline
+1 & training set & 274 & 193  & 149 \\ \hline
+2 & development set & 12 & 8 & 6 \\ \hline
+\end{tabular}
+\end{center}
+
+ After obtaining 200 hours of data, a 100 hours subset was created by selecting one from two files from 200 training set. The 200 hours and 100 hours training set are named as train.200 and train.100 respectively. 
+
+\begin{center}
+\label{statisticstrain200}
+\captionof{table}{Statistics of train.200 per genre}
+\begin{tabular}{ | c | c | c | c|}
+\hline
+\textbf{Genre} & \textbf{\#shows}  & \textbf{Duration(h)} & Aligned speech(h) \\ \hline \hline
+advice & 40 & 26 & 22 \\ \hline
+children & 51 & 19 & 14 \\ \hline
+comedy & 19 & 8 & 6 \\ \hline
+competition & 30 & 21 & 16 \\ \hline
+documentary & 29 & 22 & 14 \\ \hline
+drama & 20 & 14 & 10 \\ \hline
+events & 24 & 38 & 29 \\ \hline
+news & 61 & 42 & 37 \\ \hline
+\end{tabular}
+\end{center}
+
+
+%Table \ref{statisticstrain200} shows the statistics of each genre in the train.200 training set. 
+
+\section{Implementation}
+\subsection{Language model}
+\subsubsection{Library: SRILM}
+SRILM is a toolkit which comprises of a collection of executable programs, which are written in C++, for creating and applying statistical language models for speech recognition and other natural language applications \cite{Stolcke02srilm}. SRILM supports several operations for language model(LM), such as: creating a language model from a text corpus, interpolating several language models into one, pruning a language model, and estimate perplexity of a language model against the test corpus. 
+
+The below code is an example how to make a 4-gram language model with input from $CORPUS$ and interpolated with Kneser-ney interpolation \cite{KneserNey1993}. The syntax is pretty straightforward and easy to understand. The resulted language model will be written in arpa language model format.
+\begin{verbatim}
+ngram-count -order 4 -kndiscount -interpolate -sort -text CORPUS -lm LM
+\end{verbatim}
+
+\subsubsection{Execution}
+This internship experimented with three different kinds of language model for speech recognition. All language models are based on four gram language model. We will describe language model from the most constraint to the less constraint
+\begin{enumerate}
+\item LM.200 \\
+This language model, named as LM.200, was produced from the closed captions of 200 hours training set(train.200). LM.200 was pruned by $10^{-9}$. Pruning means deleting 4 gram sequences which are less than $10^{-9}$.  LM.200 was used for the baseline speech recognizer to select the "good" subset of data.
+
+\begin{center}
+\captionof{table}{Statistics of LM.200}
+\begin{tabular}{ | c | c | c | }
+\hline
+\textbf{No.} & \textbf{File}  & \textbf{Information} \\ \hline \hline
+1 & word.200 & 33,914 words \\  \hline
+2 & LM.200 & uni-gram=33916 \\ 
+ & & bi-gram=402299 \\ 
+& & tri-gram=111868 \\  
+& & 4-gram=64801 \\  \hline
+3 & LM.200.1e-9 & ngram 1=33916 \\  
+ & & ngram 2=402299 \\  
+& & ngram 3=98566 \\  
+& & ngram 4=51215 \\  \hline
+\end{tabular}
+\end{center}
+
+\item LM.7weeks+subtitles.limited.1e-9 \\
+A language model was generated from the closed captions of 1600 hours transcription(7weeks TV broadcast closed captions) and interpolated with a language model from the big TV subtitles with ratio 0.9/0.1. The language model was limited by top 160,000 frequent word list and pruned by $10^{-9}$ resulting in LM.7weeks+subtitles.limited.1e-9.  The language model and together with an acoustic model and a lexicon was utilized to compute error rate of the development set.
+
+\begin{center}
+\begin{tabular}{ | c | c | c | }
+\hline
+\textbf{No.} & \textbf{File}  & \textbf{Information} \\ \hline \hline
+1 & word.160k & 160,000 words \\  \hline
+2 & LM.7weeks & ngram 1=91836 \\
+ & & ngram 2=1817881 \\
+ & & ngram 3=980925 \\
+ & & ngram 4=847736 \\  \hline
+3 & LM.subtitles & ngram 1=756644 \\
+ & & ngram 2=27144330 \\
+ & & ngram 3=37162518 \\
+ & & ngram 4=57912280 \\ \hline
+4 & LM.7weeks+subtitles & ngram 1=768522 \\
+ & & ngram 2=27441072 \\
+ & & ngram 3=37312673 \\
+ & & ngram 4=58183256 \\ \hline
+5 & LM.7weeks+subtitles.limited & ngram 1=160002 \\
+ & & ngram 2=24926818 \\
+ & & ngram 3=32102763 \\
+ & & ngram 4=44253079 \\ \hline
+5 & LM.7weeks+subtitles.limited.1e-9 &ngram  1= 160002 \\
+ & & ngram  2=   5251197 \\
+ & & ngram  3=   3876171 \\
+ & & ngram  4=   2453067 \\ \hline
+\end{tabular}
+\end{center}
+
+\item LM.genres \\
+Eight language models were generated from each genre(LM.documentary, LM.news, LM.events, LM.drama, LM.competition, LM.comedy, LM.children, and LM.advice). Then, each language model was interpolated with the big subtitle LM with  ratio 0.9/0.1, limited by the top 160,000 word list, and pruned by $10^{-9}$ threshold. The language model was used in the new proposed algorithm only.
+
+\begin{center}
+\begin{tabular}{ | c | c | c | }
+\hline
+\textbf{No.} & \textbf{File}  & \textbf{Information} \\ \hline \hline
+1 & LM.documentary & ngram 1=37542
+ngram 2=437631
+ngram 3=135632 \\
+& & ngram 4=90381   \\ \hline
+2 & LM.news & ngram 1=44588
+ngram 2=661625
+ngram 3=305473 \\
+& & ngram 4=255125  \\ \hline
+3 & LM.events & ngram 1=23717
+ngram 2=306938
+ngram 3=125934 \\
+& & ngram 4=95203  \\ \hline
+4 & LM.drama & ngram 1=21345
+ngram 2=202078
+ngram 3=60920 \\
+& & ngram 4=40073  \\ \hline
+5 & LM.competition &  ngram 1=33269
+ngram 2=385257
+ngram 3=124584 \\
+& & ngram 4=89642 \\ \hline
+6 & LM.comedy & ngram 1=20180
+ngram 2=165073
+ngram 3=39353 \\
+& & ngram 4=23877  \\ \hline
+7 & LM.children &  ngram 1=27029
+ngram 2=287141
+ngram 3=84063 \\
+& & ngram 4=57851 \\ \hline
+8 & LM.advice & ngram 1=30545
+ngram 2=397766
+ngram 3=154416 \\
+& & ngram 4=108794  \\ \hline
+\end{tabular}
+\end{center}
+
+\end{enumerate}
+
+To build language models we mentioned before, we utilized SRILM. In addition to building language models, SRILM is able to interpolate several language models, limit vocabularies of a language models, prune a language model by a threshold, and many more.
+
+
+\subsection{Acoustic model}
+\subsubsection{Library: Kaldi}
+Kaldi is a toolkit, written in C++, which comprises several tools which are useful to experiment and build a speech recognition system \cite{Povey_ASRU2011}. Kaldi supports several operations to build a speech recognition system, such as: extracting feature vectors, acoustic modeling, training acoustic models, and creating decoding graph as well as decoding audio inputs into lattices. Kaldi provides several features, such as:
+\begin{itemize}
+\item It support finite state transducer(FST), which is based on OpenFST library. The FST is used to build a decoding graph with the inputs of acoustic model, language model, and lexicon.
+\item It is extensible and provides complete recipes. Kaldi gives many recipes to build acoustic model, such as: gaussian mixture model, deep neural network, etc.
+\item It supports linear algebra and utilizes the standard linear algebra library: BLAS and LAPACK.
+\item It has been tested thoroughly to ensure the quality of the library.
+\end{itemize}
+
+\subsubsection{Implementation}
+
+
+\section{Recognition}
+The last step after training an acoustic model and building a language model is to recognize a data set. The recognition is useful for data selection(computing the new word error rate as well as phone error rate ) and evaluate how good our data selection is. In overall, the recognition(or decoding) process works as following:
+\begin{enumerate}
+\item Create a decoding graph from an acoustic model, a language model, and a lexicon. In Kaldi's implementation, it transforms the  acoustic model, the language model, and the lexicon into a weighted finite state transducer(WFST).
+\item Decode the dataset by using the WFST. In Kaldi, the decoding process will result in a lattice. Lattice is a decoding graph which represents some variants of the recognition. Providing only one best recognition is not practical; thus lattice is the way to represent the recognition/decoding result. 
+\item Compute the best path of word or phone in the lattice and calculate the WER as well as PER. Kaldi produces two ctm files(word and phone ctm files) which are the best decoding results which the algorithm can obtain. The ctm file consists of words(or phone) in the transcription with its start and end time relative to the audio. By utilizing sclite, the ctm file(the hypothesized word/phone from the ASR) is compared with the transcriptions(the closed captions or the detailed transcription). Then, the code matches and computes the minimum edit distance to calculate the error rate.
+\end{enumerate}
+
+\subsection{Data Selection}
+
+
+
+\subsection{Evaluation}
+To evaluate how good our data selection is, we need to evaluate the automatic speech recognizer(especially the acoustic model). In every iteration, we train an acoustic model; furthermore, the acoustic model and together with the language model(LM.7weeks+subtitles.limited.1e-9) as well as the lexicon, we build a decoding graph. 
+
+After building a decoding graph, the decoding script is run with the development set to compute a decoding lattice. After generating the lattice, the script to compute the best path from lattice and calculate word error rate is executed. This word error rate is utilized to compare between iteration. If the WER in the next iteration decreases compared to the previous one, the data selection iteration will continue; otherwise, stop the iteration. 
+
+\section{Execution servers}
+To run our experiment, we utilized grid 5000 server cluster. Grid 5000 is a computing cluster with a focus on parallel and distributed computing \cite{Grid5000}. It has several key features:
+\begin{itemize}
+\item It provides a large amount of resources, over 1000 nodes, and massive volume of hard disk.
+\item The experiment is highly configurable where we can specify number of nodes and the criteria of the nodes which we will use.
+\item We can do advanced monitoring of memory usage, cpu usage, and the log of our experiment which later be used to analyze the experiment.
+\end{itemize}
+
+The following is the description of resources which we leveraged for this internship based on the tasks:
+\begin{enumerate}
+\item Train acoustic models: 1 computer with GPU and 8 computers without GPU. At least one computer with GPU is compulsory because we can harness GPU to parallelization the computation of DNN training. 
+\item Create decoding graph only needs one computer because the Kaldi recipe does not need parallelization for this process.
+\item Decoding the ASR leverages 20 computers. Usually one computer can recognize one hour of audio within one hour. Therefore, the more computer we use, the faster the decoding process will be. 
+\item Lastly, the error rate computation and data selection process only utilizes one computer. 
+\end{enumerate}
+% server
+% exectution time
+

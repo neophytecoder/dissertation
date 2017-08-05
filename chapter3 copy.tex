@@ -1,0 +1,281 @@
+\chapter{Methodology}
+This chapter mainly discusses the methodology. First, we explain the data which we used. After that, the baseline method is elaborated. Lastly, we propose new data selection algorithms.
+% Overall Data
+% part2
+% Metadata
+% MGB Baseline
+
+\section{Data}
+% cite it here
+For this internship, we used TV broadcasts downloaded from internet. 
+\begin{itemize}
+\item The audio files are taken from TV broadcasts over period of 1 April 2008 - 19 may 2008(7 weeks). Total duration of audio is 1,600 hours.
+\item TV brodcast transcriptions(7 weeks closed captions) of the audio files are provided. The closed captions are close to what the audio says, but not exactly the same as the speakers of the audio said.
+\item 640 million words of TV subtitles are given over the period of 1979-2013. In addition to that, the 640M subtitles are filtered to avoid overlap with the 7 weeks closed captions.
+\end{itemize} 
+
+We prepared two data sets: training set and development set. The training dataset has a total duration of 1600 hours of audio. To evaluate our model, we have a development set. To accelerate the acoustic model training,  we selected roughly 200 hours of data from the training set. Some metadata are provided in our data, such as: speaker id of the transcript, genre of the show, date and time of the show, as well as television channel where the show was aired. In addition, each segment has start and end time when the segment was shown in the TV broadcast. 
+
+How to select 200 hours(train.200) and 100 hours(train.100) subset of data: 
+\begin{enumerate}
+\item The files in train.full were sorted by their size.
+\item Select the biggest file out of 8 files.
+\item Write the selected data into 200 training set file.
+\end{enumerate}
+Because the duration of train.full is more or less 1600 hours, 200 hours of data were obtained by using this random selection. 
+
+\begin{center}
+\begin{tabular}{ | c | c | c | c | c | c | c | }
+\hline
+No & Data set & \#shows & Duration(h) & Aligned speech (h) \\ \hline
+1 & full training set & 2,193 & 1,580 & 1,197 \\ \hline
+2 & dev.short & 12 & 8 & 6 \\ \hline
+3 & train.200 & 274 & 193  & 149 \\ \hline
+\end{tabular}
+\end{center}
+
+ After obtaining 200 hours of data, a 100 hours subset was created by selecting one from two files from 200 training set. The 200 hours and 100 hours training set are named as train.200 and train.100 respectively.
+
+
+All files in full training set have closed captions. In contrast, all files in development set have closed captions as well as manually annotated human transcription. The transcript is manually and carefully annotated by human. Thus, the transcript is believed to be the closest transcription spoken by speakers in audio files.
+
+%\begin{figure}
+%\begin{subfigure}{.5\textwidth}
+%\caption{AWD}
+%\includegraphics[scale=0.15]{awdAlign}
+%\end{subfigure}
+%\begin{subfigure}{.5\textwidth}
+%\caption{WMER and PMER}
+%\includegraphics[scale=0.4]{pmerwmerAlign}
+%\end{subfigure}
+%\caption{Aligned transcription provided by MGB}
+%\end{figure}
+
+\begin{center}
+\captionof{table}{Statistics of train.200 per genre}
+\begin{tabular}{ | c | c | c | c|}
+\hline
+\textbf{Genre} & \textbf{\#shows}  & \textbf{Duration(h)} & Aligned speech(h) \\ \hline \hline
+advice & 40 & 26 & 22 \\ \hline
+children & 51 & 19 & 14 \\ \hline
+comedy & 19 & 8 & 6 \\ \hline
+competition & 30 & 21 & 16 \\ \hline
+documentary & 29 & 22 & 14 \\ \hline
+drama & 20 & 14 & 10 \\ \hline
+events & 24 & 38 & 29 \\ \hline
+news & 61 & 42 & 37 \\ \hline
+\end{tabular}
+\end{center}
+
+\begin{figure}
+\caption{Bar chart of each genre from all training data and 200 hours training data}
+\includegraphics[scale=0.5]{barchartgenre}
+\centering
+\end{figure}
+
+
+% Dataset
+% explain dev.short, train.200, train.full
+% transcript align, transcript lsdecode, transcript human
+
+
+\section{Baseline model}
+This section explains the baseline data selection technique which is inspired from Woodland \cite{Woodland2015}. First, we explain how to evaluate whether data selection works well. Then, we elaborate the baseline algorithm. 
+
+
+
+\subsection{Error rate and average word duration}
+The standard evaluation of speech recognition is word error rate(WER). WER compares and counts the number of edits between the real transcription and the decoding result(the hypothesis transcription which is produced by the speech recognizer). The first step to calculate WER is by computing the number of edits with minimum edit distance algorithm. The algorithm produces the number of substitution, insertion, and deletion.  Then, word error rate can be calculated as following:
+\begin{equation}
+\textrm{Word error rate} = 100 \times \frac{\textrm{Insertion} + \textrm{Substitution} + \textrm{Deletion}}{\textrm{Total words in correct transcript}}
+\end{equation}
+
+Phone error rate(PER) is a metric which compares the hypothesis transcriptions and the real transcriptions in phone level. Instead of comparing words(calculating WER), we need to compare phone in data selection problem. The main reason is we want to improve the acoustic model which outputs a sequence of hypothesized phones. 
+
+When selecting the subset of data, we compared the closed captions and the output of speech recognition. To avoid confusion with WER and PER(error rate between the hypothesized transcriptions and the real transcriptions), we used term word matched error rate(WMER) and phone matched error rate(PMER), which is an error rate between the closed captions and the decoding results in word and phone level respectively.
+
+One of the standard framework of running minimum edit distance and calculating error rate is sclite. sclite is able to do alignment and calculate error rate. Moreover, it provides some statistic summary, e.g. total insertion, total deletion, overall error rate, etc, and calculate error rate for each speaker. It also provides insertion, deletion, and substitution for each segment which later can be used to calculate WMER and PMER for each segment.  
+
+%\subsection{Cambrige method}
+% explain cambridge method here
+
+
+\subsection{Our baseline method}
+
+
+Our baseline was inspired from the Cambridge method \cite{Woodland2015}. As shown in the picture \ref{fig:LandscapeDataPipeline}, our baseline technique has two pipelines: data selection and evaluation. Data selection pipeline is to select the best subset of data, while the evaluation pipeline is to measure how good the selected data is. 
+
+The data selection pipeline works as following:
+\begin{enumerate}
+\item Train an acoustic model(AM.100-v0) on 100 hours of training data(train.100)
+\item Build a language model(e.g. LM.200.1e-9) from 200 hour transcriptions. This language model was built from closed captions of train.200. Then, the language model is pruned by $10^{-9}$. In other word, if the probabilities of N-Gram word sequence is less than $10^{-9}$, they will be excluded. We will elaborate the language model in the next section. 
+\item By utilizing the acoustic model(AM.100-v0),  the language model(LM.200.1e-9), and a lexicon(e.g. Lexicon.200), recognize the development set(8 hours dev set) to know the overall PER and WER. Our lexicon is from Combilex British English lexicon. Lexicon.200 is a subset of Combilex lexicon which consists of words in the 200-hour training set(train.200).
+\item By using the same acoustic model(AM.100-v0), language model, and lexicon recognize the 200 hour training set. From the recognition process, calculate PMER(phone matched error rate), WMER(word matched error rate), and AWD(average word duration) of each segment. 
+\item Sort segments according to its PMER. Choose 100 hour segments with top PMER value if the segments has AWD with range between 0.165 and 0.66.  This range follows the AWD range from the Cambridge method.
+\item Train a new acoustic model(AM.100-v1) with the 100 hour data(100-v1). 
+\item Utilizing AM.100-v1, LM.200, and Lexicon.200, recognize 200 hours data to get 100 hour data(100-v2). Retrain an acoustic model(AM.100v2) by using 100-v2 and re-recognize the 200 hour data. Reiterate the process of selecting(100-v3 and so on) and training data(AM.100v3 and so on) until no further improvement is found.
+\end{enumerate}
+
+When to stop the data selection pipeline? The answer is to utilize the evaluation pipeline. The evaluation pipeline will produce phone matched error rate(PMER) and word matched error rate(WMER). If WMER decreases in the next iteration, we continue our iteration; otherwise, we halt the iteration. 
+
+\begin{sidewaysfigure}
+	\clearpage 
+	\includegraphics[width=\textwidth]{datapipeline}
+    	\caption{Data selection pipeline}
+    	\label{fig:LandscapeDataPipeline}
+\end{sidewaysfigure}
+
+
+
+\subsection{Language model}
+This internship experimented with three different kinds of language model. All language models are based on four gram language model. 
+\begin{enumerate}
+\item LM.200 \\
+This language model, named as LM.200, was produced from the closed captions of 200 hours training set(train.200). LM.200 was pruned by $10^{-9}$.  LM.200 was used for the baseline speech recognizer to select the "good" subset of data.
+
+\begin{center}
+\captionof{table}{Statistics of LM.200}
+\begin{tabular}{ | c | c | c | }
+\hline
+\textbf{No.} & \textbf{File}  & \textbf{Information} \\ \hline \hline
+1 & word.200 & 33,914 words \\  \hline
+2 & LM.200 & uni-gram=33916 \\ 
+ & & bi-gram=402299 \\ 
+& & tri-gram=111868 \\  
+& & 4-gram=64801 \\  \hline
+3 & LM.200.1e-9 & ngram 1=33916 \\  
+ & & ngram 2=402299 \\  
+& & ngram 3=98566 \\  
+& & ngram 4=51215 \\  \hline
+\end{tabular}
+\end{center}
+
+\item LM.7weeks+subtitles.limited.1e-9 \\
+A language model was generated from the closed captions of 7 weeks transcription and interpolated with a language model from the big TV subtitles with ratio 0.9/0.1. The language model was limited by top 160,000 frequent word list and pruned by $10^{-9}$ resulting in LM.7weeks+subtitles.limited.1e-9.  The language model and together with an acoustic model and a lexicon was utilized to compute error rate of the development set.
+
+\begin{center}
+\begin{tabular}{ | c | c | c | }
+\hline
+\textbf{No.} & \textbf{File}  & \textbf{Information} \\ \hline \hline
+1 & word.160k & 160,000 words \\  \hline
+2 & LM.7weeks & ngram 1=91836 \\
+ & & ngram 2=1817881 \\
+ & & ngram 3=980925 \\
+ & & ngram 4=847736 \\  \hline
+3 & LM.subtitles & ngram 1=756644 \\
+ & & ngram 2=27144330 \\
+ & & ngram 3=37162518 \\
+ & & ngram 4=57912280 \\ \hline
+4 & LM.7weeks+subtitles & ngram 1=768522 \\
+ & & ngram 2=27441072 \\
+ & & ngram 3=37312673 \\
+ & & ngram 4=58183256 \\ \hline
+5 & LM.7weeks+subtitles.limited & ngram 1=160002 \\
+ & & ngram 2=24926818 \\
+ & & ngram 3=32102763 \\
+ & & ngram 4=44253079 \\ \hline
+5 & LM.7weeks+subtitles.limited.1e-9 &ngram  1= 160002 \\
+ & & ngram  2=   5251197 \\
+ & & ngram  3=   3876171 \\
+ & & ngram  4=   2453067 \\ \hline
+\end{tabular}
+\end{center}
+
+\item LM.genres \\
+Eight language models were generated from each genre(LM.documentary, LM.news, LM.events, LM.drama, LM.competition, LM.comedy, LM.children, and LM.advice). Then, each language model was interpolated with the big subtitle LM with  ratio 0.9/0.1, limited by the top 160,000 word list, and pruned by $10^{-9}$ threshold. The language model was used in the proposed new algorithm only.
+
+\begin{center}
+\begin{tabular}{ | c | c | c | }
+\hline
+\textbf{No.} & \textbf{File}  & \textbf{Information} \\ \hline \hline
+1 & LM.documentary & ngram 1=37542
+ngram 2=437631
+ngram 3=135632 \\
+& & ngram 4=90381   \\ \hline
+2 & LM.news & ngram 1=44588
+ngram 2=661625
+ngram 3=305473 \\
+& & ngram 4=255125  \\ \hline
+3 & LM.events & ngram 1=23717
+ngram 2=306938
+ngram 3=125934 \\
+& & ngram 4=95203  \\ \hline
+4 & LM.drama & ngram 1=21345
+ngram 2=202078
+ngram 3=60920 \\
+& & ngram 4=40073  \\ \hline
+5 & LM.competition &  ngram 1=33269
+ngram 2=385257
+ngram 3=124584 \\
+& & ngram 4=89642 \\ \hline
+6 & LM.comedy & ngram 1=20180
+ngram 2=165073
+ngram 3=39353 \\
+& & ngram 4=23877  \\ \hline
+7 & LM.children &  ngram 1=27029
+ngram 2=287141
+ngram 3=84063 \\
+& & ngram 4=57851 \\ \hline
+8 & LM.advice & ngram 1=30545
+ngram 2=397766
+ngram 3=154416 \\
+& & ngram 4=108794  \\ \hline
+\end{tabular}
+\end{center}
+
+\end{enumerate}
+
+One of the tools to build language model is SRILM. In addition to building language models, SRILM is able to interpolate several language models, limit vocabularies of a language models, prune a language model by a threshold, and many more.
+
+
+\subsection{Training acoustic model}
+\subsubsection{GMM HMM}
+
+
+\subsubsection{DNN HMM}
+
+%To train an acoustic model, firstly a gaussian mixture model(GMM) HMM was trained.  
+
+\section{Proposed new algorithm}
+We proposed three new algorithms which combined three different automatic speech recognizers(ASR) to select data. 
+\begin{enumerate}
+\item Average PMER and AWD of three speech recognizers and select subset of data the same as baseline algorithm.
+\item Use the baseline algorithm, but different random 200 hours of training set in each iteration.
+\item Combine three different speech recognizers and select data with the combination and selection algorithm which we proposed. This algorithm will be explained in this section.
+\end{enumerate}
+
+Before elaborating the proposed combination and selection algorithm, three different speech recognizers(ASR) are built as following:
+\begin{itemize}
+\item ASR1(the most constrained): AM1, LM.200, and Lexicon.200
+\item ASR2: AM1, LM.7weeks+subtitle, and Lexicon.7weeks+subtitle
+\item ASR3(the least constrained): AM1, LM.7weeks+subtitle, and Lexicon.7weeks+subtitle
+\end{itemize}
+
+
+The different combination can be obtained by varying acoustic models and language models. The following is the algorithm how three different ASR are combined and selected:
+
+\begin{enumerate}
+\item For each segment:
+\item Keep only segments which are in $0.166<AWD<0.65$ and $0.03<APD<0.25$ range
+\item  If one ASR has zero PMER,
+\item  \tab select the segment and corresponding closed captions
+\item  Else 
+\item  \tab If two segments have the same phone sequence
+\item  \tab \tab select the segment and the corresponding decoding result transcription 
+\item \tab Else
+\item  \tab \tab  Sort by PMER. Choose top segments with the lowest PMER. The closed captions will be chosen.
+\end{enumerate}
+
+\subsection{Evaluating speech recognizers}
+\begin{enumerate}
+\item Create a decoding graph from an acoustic model, a language model, and a lexicon. The language model and the lexicon must be the same for all acoustic models. For example in this internship: we  use LM.7weeks+subtitles.limited.1e-9 and Lexicon.7weeks+subtitles as the language model and the lexicon respectively.
+\item Decode audio of the development set(dev.short) with the graph and compare the decoding result with manually annotated transcription(transcript\_human).
+\item Calculate WER(word error rate) and PER(phone error rate). We can use sclite to compute WER and PER.
+\end{enumerate}
+
+%\subsection{Improved}
+
+
+
+
+%\section{Conclusion}
