@@ -37,10 +37,10 @@
 \contentsline {subsection}{\numberline {4.2.2}Acoustic model}{30}
 \contentsline {subsubsection}{\numberline {4.2.2.1}Library: Kaldi}{30}
 \contentsline {subsubsection}{\numberline {4.2.2.2}Implementation}{31}
-\contentsline {section}{\numberline {4.3}Recognition}{31}
-\contentsline {subsection}{\numberline {4.3.1}Data Selection}{31}
-\contentsline {subsection}{\numberline {4.3.2}Evaluation}{31}
-\contentsline {section}{\numberline {4.4}Execution servers}{32}
+\contentsline {subsection}{\numberline {4.2.3}Recognition}{31}
+\contentsline {subsubsection}{\numberline {4.2.3.1}Data Selection}{31}
+\contentsline {subsubsection}{\numberline {4.2.3.2}Evaluation}{32}
+\contentsline {section}{\numberline {4.3}Experiment resources}{32}
 \contentsline {chapter}{\numberline {5}Sample Title}{33}
 \contentsline {chapter}{\numberline {A}Sample Title}{34}
 \contentsline {chapter}{\numberline {B}Sample Title}{35}

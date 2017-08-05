@@ -168,8 +168,10 @@ Kaldi is a toolkit, written in C++, which comprises several tools which are usef
 
 \subsubsection{Implementation}
 
+% hyperparameters
+% 
 
-\section{Recognition}
+\subsection{Recognition}
 The last step after training an acoustic model and building a language model is to recognize a data set. The recognition is useful for data selection(computing the new word error rate as well as phone error rate ) and evaluate how good our data selection is. In overall, the recognition(or decoding) process works as following:
 \begin{enumerate}
 \item Create a decoding graph from an acoustic model, a language model, and a lexicon. In Kaldi's implementation, it transforms the  acoustic model, the language model, and the lexicon into a weighted finite state transducer(WFST).
@@ -177,16 +179,16 @@ The last step after training an acoustic model and building a language model is 
 \item Compute the best path of word or phone in the lattice and calculate the WER as well as PER. Kaldi produces two ctm files(word and phone ctm files) which are the best decoding results which the algorithm can obtain. The ctm file consists of words(or phone) in the transcription with its start and end time relative to the audio. By utilizing sclite, the ctm file(the hypothesized word/phone from the ASR) is compared with the transcriptions(the closed captions or the detailed transcription). Then, the code matches and computes the minimum edit distance to calculate the error rate.
 \end{enumerate}
 
-\subsection{Data Selection}
+\subsubsection{Data Selection}
+To select the good data for the next iteration, the new matched word and phone error rate must be generated from the training set. By running the recognition steps(as explained above) on the training set and comparing the decoding result with the closed captions, a file(the file with the extension of ".prf") is generated. The file contains the number of insertion, deletion, and substitution. By using the error rate equation as bellow, the new matched error rate(WMER and PMER) are computed. 
 
+Firstly, the segments are sorted based on the new PMER. Secondly, choose the top 100 hour segments based on the PMER. These selected segments are used for the next iteration. 
 
+\subsubsection{Evaluation}
+To evaluate how good our data selection is, we need to evaluate the automatic speech recognizer(especially the acoustic model). In every iteration, we train an acoustic model; furthermore, the acoustic model and together with the language model(LM.7weeks+subtitles.limited.1e-9) as well as the lexicon, we recognize the development set. After decoding and computing WER of development set, we compare the WER with the previous iteration. If the new WER is lower, we can continue the iteration; otherwise, stop the iteration. 
+ 
 
-\subsection{Evaluation}
-To evaluate how good our data selection is, we need to evaluate the automatic speech recognizer(especially the acoustic model). In every iteration, we train an acoustic model; furthermore, the acoustic model and together with the language model(LM.7weeks+subtitles.limited.1e-9) as well as the lexicon, we build a decoding graph. 
-
-After building a decoding graph, the decoding script is run with the development set to compute a decoding lattice. After generating the lattice, the script to compute the best path from lattice and calculate word error rate is executed. This word error rate is utilized to compare between iteration. If the WER in the next iteration decreases compared to the previous one, the data selection iteration will continue; otherwise, stop the iteration. 
-
-\section{Execution servers}
+\section{Experiment resources}
 To run our experiment, we utilized grid 5000 server cluster. Grid 5000 is a computing cluster with a focus on parallel and distributed computing \cite{Grid5000}. It has several key features:
 \begin{itemize}
 \item It provides a large amount of resources, over 1000 nodes, and massive volume of hard disk.
