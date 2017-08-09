@@ -1,3 +1,29 @@
-\chapter{Sample Title}
+\chapter{Conclusion and future works}
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+\section{Conclusion}
+In this internship, we explored baseline models and new proposed models of data selection for building automatic speech recognition. The models are inspired by lightly supervised technique. To build a automatic speech recognition system, one needs audio data and their corresponding exact transcription as the training set. However, we only have audio dat and closed captions as our training data. Closed captions are closed to the real transcription, but not exactly the same. Therefore, we need to apply data selection to choose the subset of good data which are used to build the automatic speech recognition. This process is called  lightly supervised technique.
+
+Our baseline model starts from training an acoustic model from a random subset of the full training set. Then, the automatic speech recognition, consisting of the acoustic model, more constrained language model, and the lexicon, recognizes the full training set to produce new value of phone matched error rate(PMER) and average word duration(AWD). The new value of PMER and AWD are utilized to select data. This process is repeated over several iterations until the process does not improve. The process is evaluated by recognizing the development set because the development set has an exact transcription to measure word error rate. If the word error rate decreases in the next iteration, the iteration continues; otherwise, stop the iteration. We did the experiments for several iterations until the forth iteration(the word error rate of the third and the forth is the same). In addition, we experimented by modifying the baseline system. We selected the segments based on WMER and chose the decoding results as the training set. However, our baseline model(without modification) works better compared to the modified baseline. Beside the baseline model, we proposed three new models. The idea behind this is to combine three different speech recognizers by varying the language models and using the same acoustic model. 
+
+The first proposed model is averaging the PMER and AWD of the transcriptions of three recognizers. Our experiment shows that the average model does not perform better than the baseline. The second proposed model is combining  three speech recognizers by our proposed algorithm. This process improves the model slightly; however, the second iteration of the model performs worse than the first iteration. This is because fixing the closed captions by replacing with the decoding results makes the transcriptions to be worse than the closed captions. The last model is randomly choosing the training set for each iteration. Our last model appears to improve the WER slightly; nonetheless, it becomes worse in the next iteration because the random selection of training data involves luck. If the training set is well selected, the WER decreases; otherwise, the model performs poorer. To conclude, the combination system seems to perform slightly better than the baseline. However, we need to make stricter rules in our combination system to prevent worsening the transcriptions. Moreover, it is necessary to have quite different speech recognizers to maximize the improvement of the process.
+
+
+
+\section{Future works}
+Our work shows some promising directions in improving the lightly supervised approach. This section disseminates some suggestions for short term as well as long term future works.
+
+\subsection{Short term}
+% build better improvement algorithm with stricter rules
+% build more distinct ASR
+One of the problem in our proposed models is when the combination algorithm fixes the closed captions by replacing with the decoding results when two speech recognizer agrees. This process tends to make the transcriptions to be worse compared to the closed captions and increases the error rare of the model. One of the solution is by making the rule to be stricter. We hope to be able to modify the combination algorithm(replacing the closed captions when three speech recognizers agree) and run an experiment to see if it decreases the error rate.
+
+We also wish to experiment with more distinct three speech recognizers. Furthermore, varying the acoustic model(in term of architecture and corpus) and language model(corpus and type of language model) probably will increase the performance of our proposed models. 
+
+
+\subsection{Long term}
+% Build an ASR which only has zero or a few amount of transcription. In the first step, we utilize closed captions instead of exact transcriptions.
+Training an automatic speech recognition requires a large amount of training data. However, manual transcription is expensive in term of time and manpower. There are unlimited supply of audio data in the internet, TV, and radio. Mostly, they have no corresponding exact transcriptions(closed captions) or even no transcription at all. Therefore, we experimented with the TV broadcasts with closed captions(not the same as the detailed transcriptions). 
+
+Closed captioning is still time-consuming and costly. Some data, such as TV broadcasts, are usually closed-captioned, but other vast sources of data, such as: audio data from internet, are not closed captioned. These data are usually in massive volume and richer in variety and content. We need to research the way to harness these data to build unsupervised automatic speech recognition.
+
+ Our work here is only the early step to build an automatic speech recognition with less supervision. We still utilized closed captions as a light supervision to build the   automatic speech recognition. We hope that in the future we can research and harness the data without transcriptions for training a highly performing unsupervised automatic speech recognition.

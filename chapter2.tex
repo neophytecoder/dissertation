@@ -1,7 +1,6 @@
-\chapter{Background and Literature Review}
+\chapter{Background}
 
-\section{Background}
-\subsection{Automatic speech recognition}
+\section{Automatic speech recognition}
 \label{subsec:ASR}
 The goal of the automatic speech recognition(ASR) is to search the most likely sentence($\hat{W}$) in a language $L$ given acoustic observation $O$ \cite{Jurafsky:2009:SLP:1214993}. ASR has been applied in many applications and domains, for example: automatic closed captioning for hearing-disabled persons \cite{Patel2010}, taking notes of conversations between doctors and patients \cite{Klann2008}, automatic closed captioning TV broadcasts \cite{Woodland2015}, and many more.
 
@@ -30,7 +29,7 @@ where $\hat{W}$ is the most likely sentence, $P(W)$ is the prior probability of 
 
 
 
-\subsection{N-Gram Language model}
+\section{N-Gram Language model}
 
 
 A language model is a statistical model which computes the probability of word sequence. One of the most common language model is N-gram language model, which we leverage in this internship. The foundation mathematics of N-Gram language model was proposed by Markov in 1913. Then, Shannon re-introduced N-gram to compute the likelihoods of English word sequences \cite{Shannon:2001:MTC:584091.584093}. N-gram language model has been applied in many applications, such as: speech recognition\cite{Woodland2015}, handwriting recognition \cite{Poznanski2016}, as well as spelling correction \cite{Kukich1992}.
@@ -57,7 +56,7 @@ PP = exp(-\frac{1}{N} \sum^{N}_{i=1} \log P(w_{i}|h_{i}))
 where $N$ is the number of words in test corpus, $w_{i}$ is the i-th word, and $h_{i}$ is the history of word $w_{i}$.
 
 
-\subsection{Acoustic model}
+\section{Acoustic model}
 The acoustic model(AM) is commonly based on hidden markov model(HMM). Thus, before talking about the acoustic model deeply, it is better to elaborate HMM first. 
 
 
@@ -136,7 +135,7 @@ Observation likelihood is the probability of a feature vector which is generated
 \end{enumerate}
 
 
-\subsection{Deep learning for acoustic model}
+\section{Deep learning for acoustic model}
 For our acoustic model, we used deep neural network(DNN) HMM. Beside DNN HMM, there exists gaussian mixture model(GMM) HMM. However, DNN HMM has been proven to outperform GMM DNN in practice \cite{Peddinti2015ATD}. Hence, we only discuss DNN in this report.
 
 \subsubsection{Feedforward neural network}
@@ -235,7 +234,7 @@ $P(y)$ can be obtained from distribution of a senone in the training set. By usi
 \frac{P(y|o) }{P(y)}
 \end{equation}
 
-Applying the hybrid approach has been introduced over 20 years ago \cite{Bourlard:1993:CSR:562393,Renals1994}. Nevertheless, it did not outperform GMM until recently. DNN excels in improving accuracy due to more representational capacity compared to GMM \cite{1406.7806}. There are several factors why DNN outperforms GMM just recently.
+Applying the hybrid approach has been introduced over 20 years ago \cite{Bourlard:1993:CSR:562393,Renals1994}. Nevertheless, it did not outperform GMM until recently. DNN reduces substantial amount of word error rate compare to GMM \cite{Dahl2011,38130}. DNN excels in improving accuracy due to more representational capacity compared to GMM \cite{1406.7806}. There are several factors why DNN outperforms GMM just recently.
 \begin{itemize}
 \item The amount of training dataset has increased. DNN usually works well when there exists a massive volume of training data.
 \item Training DNN can be done on GPU which accelerates the execution time. 
@@ -246,5 +245,5 @@ Applying the hybrid approach has been introduced over 20 years ago \cite{Bourlar
 
 % advantage of TDNN is it can reduce computational time and model size.
 
-%\subsection{Lexicon}
+%\section{Lexicon}
 

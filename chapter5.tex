@@ -1,339 +1,121 @@
-\chapter{Experiment results}
-
-%\textbf{Insert time and perpelexity here.}
+\chapter{Experiment result}
 
 \section{Baseline model}
+The data selection was run four time until it saturates in iteration number 3. Basically, the data selection works as following: train a TDNN acoustic model(AM) on 100 hour randomly selected training set(with closed caption), recognize the training set using the new acoustic model and compute new phone matched error rate, reject segments(utterances) which are not in the AWD range($0.165 \leq AWD \leq 0.66$), sort and select new data based on the lowest phone matched error rate. To evaluate how good the data selection is, the acoustic model and together with the language model as well as lexicon must recognize the development set and compute word error rate. If the word error rate decreases, the iteration can continue; otherwise, stop the iteration.
 
-\subsection{Acoustic model AM.200 and Language Model Version 1 (LM.200.1e-9)}
-\label{amv0s1}
+Chart \ref{awd} shows the average word duration of iteration 0, 1, and 2. The X-axis is the value of average word duration, while the Y-axis represents the cumulative duration of audio in percentage. All utterances are sorted based on AWD to draw this chart. Two vertical line represents boundaries to select utterances. The utterances which are inside these two lines(the value of AWD is in the range $0.165 \leq AWD \leq 0.66$) will be selected. The result shows that less than 15\% data are rejected. Selection by using AWD is important to reject utterances which are badly aligned.
+
+Chart  \ref{pmer} demonstrates the phone matched error rate of all iterations. The X-axis and Y-axis represent the value of PMER of each utterance and the duration of audio in percentage respectively. All utterances are sorted based on PMER to generate this chart. It is obvious to see that the next iteration has more zero PMER compared to the previous iteration. Moreover, the value of PMER decreases slightly over several iterations where more and more utterances have less PMER in the next iteration. Nevertheless, the iteration stops in iteration three because the data selection converges(no further improvement in PMER).
+
+Table \ref{tab:werper} shows the result of the experiments. Baseline 0(row 1)  is the initial iteration(iteration 0) where the training set is randomly 100 hours from 200 hours of training set. Row number 2-4 are the next iteration. 
+
+Baseline decoding(row 2) utilizes the audio data and the decoding results(in place of the closed captions) of the previous iteration(baseline 0) as the new training set. Baseline WMER(row 3) and baseline 1(row 4) use the audio data and the closed captions(with new PMER and AWD) as the new training set. However, baseline WMER sorts utterances based on WMER instead of PMER. In contrast, baseline 1 utilized the same method as described in \ref{ch3:dataselection}. Consequently, using closed captions and sorting by PMER are the best; thus, the next iteration only experiments with closed captions as training set and sorting by PMER. Baseline 2 and 3 are the second and third(last) iteration respectively. They have the same value of WER; hence, the iteration stops because the data selection has converged.
+
+\begin{figure}
+\caption{Average word duration of the iteration}
+\label{awd}
+\includegraphics[scale=0.7]{awd} 
+\centering
+\end{figure}
+
+\begin{figure}
+\caption{Phone matched error rate of the iteration}
+\label{pmer}
+\includegraphics[scale=0.7]{pmer} 
+\centering
+\end{figure}
 
 
-Calculating PMER and WMER for each segment by utilizing AM.200 and LM.200.1e-9:
+\begin{center}
+\label{tab:werper}
+\captionof{table}{WER and PER of acoustic models}
+\begin{tabular}{| c | c | c | c | c | c |   }
+\hline
+No. & Model & WER(\%) & PER(\%) & PMER thresh(\%) \\ \hline
+1 &  baseline 0 & 43.9 & 35.8 & 36.0  \\ \hline
+2 &  baseline decoding & 42.3 & 34.3 & 45.98 \\ \hline
+3 &  baseline WMER & 41.2 & 34.1 & \\ \hline
+4 &  baseline 1 & 41.2 & 33.8  & 35.71 \\ \hline
+5 & baseline 2 & 40.5 & 33.3  & 35.44 \\ \hline
+6 & baseline 3 & 40.5 & 33.3  &  \\ \hline
+\end{tabular}
+\end{center}
+
+\section{Proposed models}
+
+In addition to the baseline model, we proposed three new models which we hoped it would increase the performance. Table \ref{tab:proposedModel} demonstrates the result of our technique. Baseline 1 and 2 are the same model as shown in Table \ref{tab:werper}, while other rows show the results of the proposed models.  We put baseline 1 and 2 to compare with the proposed models.
+
+As explained in Section \ref{proposedModels}, we proposed three new models:
 \begin{enumerate}
-\item GMM(GMM.200): GMM is trained by using the 200 hours data
-\item TDNN(TDNN.200): the result of GMM training(GMM.200) is utilized to build a TDNN(time delay neural network). 
-\item TDNN graph creation \\
-The language model used is the LM.200.1e-9 and  the acoustic model is  TDNN.200; furthermore, the dictionary used(Lexicon.200) is the modification of the library provided by MGB(Lexicon.MGB). Words in Lexicon.MGB which do not exist in word.200 are removed from Lexicon.200.
-%\item TDNN development set recognition \\
-%The development set is files from dev.short, which contains 8 hours of audio. The development set is recognized by leveraging the graph created in the previous step.
-\item TDNN 200 hours of training data recognition \\
-We need to recognize 200 hours data to calculate PMER, WMER, and AWD. This data will be used for data selection of the next iteration.
-\item Sclite score PMER and WMER \\
-Use the lattice and graph(produced at step 5 and 3 respectively) to calculate overall PMER and WMER. However, the decoding program does not provide PMER, WMER, and AWD for each segment. Fortunately, the program generates prf file which contains number of correction, insertion, deletion, and substitution for each segment. Two prf files exist after decoding:(ctm\_words.filt.filt.prf contains word match error rate and ctm\_phones.filt.filt.prf contains phone match error rate). From there, we are able to calculate  PMER, WMER, and AWD of each segments.  For the development set, we only need to know the overall PER and WER. In contrast, training set recognition needs PMER, WMER, and AWD for each segment. 
+\item Average PMER and AWD of three ASRs.  \\
+By using the baseline acoustic model in baseline 1, three different ASRs were created by varying three different language models(as mentioned in \ref{3LM}). Each ASR from the three ASRs recognized the full training set and calculated new PMER and AWD. Each corresponding segment in three ASRs averages their PMER and AWD. The averaged training set is selected with the data selection method and trained to generate a new acoustic model. The new acoustic model with LM.7weeks+sub and the lexicon is evaluated as shown in model proposed average(row 3). Because the model does not improve the performance as good as baseline 2, we do not continue to the next iteration.
 
-\end{enumerate}
+\item Combine three ASRs.  \\
+We combined the recognition of three ASRs from Baseline 1 by using the algorithm explained in Listing \ref{algoCombine}, and then, we train a new acoustic model from the data. We evaluated the performance of the new model as shown in row 4. The value of WER of row 4(proposed combination 1) and WER of row 2(baseline 2) are the same; but, the PER decreases by 0.1. Therefore, we continue the iteration to see if it can further reduce the error rate.
 
+Then, three ASRs of proposed combination 1 were combined and trained a new acoustic model based on the combination algorithm(Listing \ref{algoCombine}). We evaluated the new model and showed the result in row 5. Unfortunately, the performance of the model becomes poorer. The reason behind this is the combination algorithm tries to fix the bad closed captions by replacing with the decoding transcriptions if two ASRs agree(has exactly the same decoding results).
 
-version AM0
-% table
-\begin{center}
-\begin{tabular}{ | c | c | c | c |  c |  }
-\hline
-\textbf{No.} & \textbf{Description} & \textbf{Result} & \textbf{execution time} & \textbf{extra info} \\ \hline \hline
-1 & GMM.100  &  & 3h 30m & 20 hosts \\  \hline
-%/talc2/multispeech/calcul/users/jkarsten/mgb/recipe/tools/baseline/baseline1_backup/gmm
-%1.1 & GMM decoding & 57.2\% WER  & 3h 36m 47s & 20 hosts, 4 cores \\  \hline \hline
-%2 & AM.200 training. &  & 38h 30m 31s & 3 nodes \\  
+\item Utilize a randomly different random training set.  \\
+We select a different full training set, and then, we used the baseline model 2 to recognize the new training set. The closed captions of the new training set and their corresponding PMER and AWD are used for training a new acoustic model. The new model is evaluated and written in row 6. It shows better performance by reducing WER as well as PER by 0.1. Again, we do another iteration, select a new training set randomly, and evaluate the new model(row 7). Unfortunately, the performance becomes worse compared to baseline 2. There is a luck factor in this technique. If we choose a very good training set in the next iteration, we may obtain a better performance model. Otherwise, the error rate can get worse as shown in row 7.
 
-2 & TDNN.100 training: & & 17h 7m & 3 GPU hosts \\ 
- & LM.200.1e-9,  GMM.100, Lexicon.200 &  & & \\ \hline
- %/talc2/multispeech/calcul/users/jkarsten/mgb/recipe/tools/baseline/baseline1_backup/tdnn
- 
-3 & Create a graph from TDNN.200,  &  & 6m & 1 host \\  
- & LM.200.1e-9, Lexicon.200  & & & \\ \hline
-%/talc2/multispeech/calcul/users/jkarsten/mgb/recipe/tools/modifASR/tdnn_s1/graph_creation_from_arpaLM
+\end{enumerate} 
 
-4 & Create a graph from TDNN.200,  &   & 4h 49m & 1 host \\  
- & LM.7weeks+subtitles.1e-9, Lexicon.200  & & & \\ \hline
-
-%4 & AM.200 recognized dev.short &  & 2h 58m 58s   & 20 hosts  \\  \hline
-5 & TDNN.100 recognized train.200 &  & 16h 6m & 20 hosts \\  \hline 
- %/talc2/multispeech/calcul/users/jkarsten/mgb/recipe/tools/modifASR/tdnn_s1/recognition_with_scoring/decode_res_train_200_fst+merall_mgb2015.wordList.4gm.kn.arpa.gz.1e-9.arpa_4thr
-
-6 & TDNN.100 \& LM.7weeks+subtitles.1e-9 & WER 43.9\%   & 45m & 20 hosts \\  
-&  recognized dev.short & PER 35.8\% & & \\ \hline
-%5 & Calculate Overall PMER & 24.8 \% PMER   & 5h 5m 51s & 1 host \\  \
- %& and WMER of train.200  & 32.4 \% WMER & & \\ \hline
-%5.1 &  Calculate PMER and WMER & & 20m 22s & 1 host \\  
- %&  per segment of step 6 & & &  \\  \hline
-%/talc2/multispeech/calcul/users/jkarsten/mgb/recipe/tools/modifASR/tdnn_s1/sclite_score_pmer_and_wmer
-% /talc2/multispeech/calcul/users/jkarsten/mgb/recipe/tools/modifASR/tdnn_s1/calculate_pmer_wmer_per_segments
-
-%6 & Calculate PER  &  32.5 \% PER  & 1h 10m 57s   & 1 host \\  \
-% & PMER, WMER calculation  &   48.7\% WER   & & \\ \hline
-\end{tabular}
-\end{center}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% table
-version AM1
-\begin{center}
-\begin{tabular}{ | c | c | c | c |  c |  }
-\hline
-\textbf{No.} & \textbf{Description} & \textbf{Result} & \textbf{execution time} & \textbf{extra info} \\ \hline \hline
-1 & GMM.100  &  & 4h 7m & 20 hosts \\  \hline
-
-2 & TDNN.100 training: & & 20h 1m & 3 GPU hosts \\ 
- & LM.200.1e-9,  GMM.100, Lexicon.200 &  & & \\ \hline
- 
-3 & Create a graph from TDNN.200,  &  & 5m & 1 host \\  
- & LM.200.1e-9, Lexicon.200  & & & \\ \hline
- 
-4 & Create a graph from TDNN.200,  &   & 3h 7m & 1 host \\  
- & LM.7weeks+subtitles.1e-9, Lexicon.200  & & & \\ \hline
-
-5 & TDNN.100 recognized train.200 &  & 14h 18m & 20 hosts \\  \hline 
-
-6 & TDNN.100 \& LM.7weeks+subtitles.1e-9 & WER 41.2\%   & 46m & 20 hosts \\  
-&  recognized dev.short & PER 33.8\% & & \\ \hline
-\end{tabular}
-\end{center}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-version AM2
-\begin{center}
-\begin{tabular}{ | c | c | c | c |  c |  }
-\hline
-\textbf{No.} & \textbf{Description} & \textbf{Result} & \textbf{execution time} & \textbf{extra info} \\ \hline \hline
-1 & GMM.100  &  & 3h 3m & 20 hosts \\  \hline
-
-2 & TDNN.100 training: & & 23h 58m & 3 GPU hosts \\ 
- & LM.200.1e-9,  GMM.100, Lexicon.200 &  & & \\ \hline
- 
-3 & Create a graph from TDNN.200,  &  & 5m & 1 host \\  
- & LM.200.1e-9, Lexicon.200  & & & \\ \hline
- 
-4 & Create a graph from TDNN.200,  &   & 3h 13m & 1 host \\  
- & LM.7weeks+subtitles.1e-9, Lexicon.200  & & & \\ \hline
-
-5 & TDNN.100 recognized train.200 &  & 15h 51m & 20 hosts \\  \hline 
-
-6 & TDNN.100 \& LM.7weeks+subtitles.1e-9 & WER 40.5\%   & 36m & 20 hosts \\  
-&  recognized dev.short & PER 33.3\% & & \\ \hline
-\end{tabular}
-\end{center}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-version AM2
-\begin{center}
-\begin{tabular}{ | c | c | c | c |  c |  }
-\hline
-\textbf{No.} & \textbf{Description} & \textbf{Result} & \textbf{execution time} & \textbf{extra info} \\ \hline \hline
-1 & GMM.100  &  & 3h 3m & 20 hosts \\  \hline
-
-2 & TDNN.100 training: & & 25h 27m & 3 GPU hosts \\ 
- & LM.200.1e-9,  GMM.100, Lexicon.200 &  & & \\ \hline
- 
-3 & Create a graph from TDNN.200,  &  & 7m & 1 host \\  
- & LM.200.1e-9, Lexicon.200  & & & \\ \hline
- 
-4 & Create a graph from TDNN.200,  &   & 4h 49m & 1 host \\  
- & LM.7weeks+subtitles.1e-9, Lexicon.200  & & & \\ \hline
-
-5 & Create a graph from TDNN.200,  &   & 2h 1m each genre & 1 host \\  
- & LM.genres.1e-9, Lexicon.200  & & & \\ \hline
-
-6 & TDNN.100 recognized train.200 &  & 15h 52m & 20 hosts \\  \hline 
-
-7 & TDNN.100 \& LM.7weeks+subtitles.1e-9 & WER 40.5\%   & 38m & 20 hosts \\  
-&  recognized dev.short & PER 33.3\% & & \\ \hline
-\end{tabular}
-\end{center}
-
-
-
-%\subsection{Acoustic model AM.200 and Language Model LM.7weeks+subtitles.limited.1e-9}
-% table
-%\begin{center}
-%\begin{tabular}{ | c | c | c | c |  c |  }
-%\hline
-%\textbf{No.} & \textbf{Description} & \textbf{Result} & \textbf{execution time} & \textbf{extra info} \\ \hline \hline
-%3 & Create a graph from TDNN.200,  &  & 3h 12m 25s & 1 host \\   
-% & LM.7weeks+subtitles.limited.1e-9,   & & & \\ 
-% & Lexicon.7weeks+subtitles & & & \\ \hline
- %/talc2/multispeech/calcul/users/jkarsten/mgb/recipe/tools/modifASR/tdnn_s2/graph_creation_from_arpaLM
-
-
-%4 & TDNN.200 &  & 1h 10m 59s & 20 hosts \\  
-% & recognized dev.short & & & \\ \hline
-% /talc2/multispeech/calcul/users/jkarsten/mgb/recipe/tools/modifASR/tdnn_s2/recognition_human/recognition_with_scoring_human
-
-
- %5 & TDNN.200 recognized &  & 10h 9m 35s & 20 hosts \\  
- %& train.200 & & & \\ \hline  
- %/talc2/multispeech/calcul/users/jkarsten/mgb/recipe/tools/modifASR/tdnn_s2/recognition_with_scoring
- 
-% 6 & TDNN AM.200 dev short & 31.8\% PER  & 4h 58m 26s & 1 hosts \\  
-% & PMER, WMER calculation & 49.5\% WER & & \\ \hline
-% 6.1 & TDNN AM-V0 train 200 & 26.4\% PMER & 4h 58m 26s & 1 hosts \\  
-% & PMER, WMER calculation & 39.7\% WMER  & & \\ \hline
-% 6.2 & Calculate PMER, WMER &  &  & 1 hosts \\  
- %& AWD per segment &  & & \\ \hline \hline
-%\end{tabular}
-%\end{center}
-
-
-\subsection{Acoustic model(AM.200) and Language Model version 3(LM.genres)}
-
-
-\subsection{Acoustic model AM.100-v1 and Language Model version 1 (LM.200.1e-9)}
-% table
-\subsubsection{100 hours selection(100-v1)}
-How to select 100 hours subset of data for baseline model v1:
-Section \ref{amv0s1}  calculates PMER, WMER, and AWD for each segments. Consequently, we can extract segments(of 200 hours transcriptions) which satisfy $0.165 \le AWD \le 0.66$. In the other word, the segments which does not satisfy are removed. Then, segments are sorted based on their PMER in ascending. We can deduce PMER threshold  and its total duration by sorting PMER as presented in the following table:  
-\begin{center}
-\label{pmerAM0s1}
-\begin{tabular}{ | c | c | c | }
-\hline
-\textbf{PMER} & \textbf{Total duration} & \textbf{Percentage of total segment duration}  \\ \hline \hline
-0.0 & 14.83 h & 10\% \\ \hline
-5 & 29.66 h & 20\% \\ \hline
-10 & 44.49 h & 30\% \\ \hline
-16 & 59.32 h & 40\% \\ \hline
-24 &  74.15 h & 50\% \\ \hline
-33 & 88.98 h & 60\% \\ \hline
-47 & 103.81 h & 70\% \\ \hline
-82 & 118.64 h & 80\% \\ \hline
-\end{tabular}
-\end{center}
-
-
-%PMER: 0.0; duration: 53389.43; percentage: 0.100003435255
-%PMER: 0.05; duration: 106776.9; percentage: 0.200003199245
-%PMER: 0.1; duration: 160166.65; percentage: 0.30000723389
-%PMER: 0.16; duration: 213552.14; percentage: 0.400003289154
-%PMER: 0.24; duration: 266939.76; percentage: 0.500003334108
-%PMER: 0.33; duration: 320342.37; percentage: 0.600031456745
-%PMER: 0.47; duration: 373713.84; percentage: 0.700001251227
-%PMER: 0.82; duration: 427112.53; percentage: 0.800022031335
-
-The Table \ref{pmerAM0s1} shows that 60\% of data has 33\% PMER with total duration of 88.98 hours of audio. From the table, we conclude that threshold 33 is selected as the threshold to select data for the next iteration.
-
-\begin{center}
-\label{wmerAM0s1}
-\begin{tabular}{ | c | c | c | }
-\hline
-\textbf{WMER} & \textbf{Total duration} & \textbf{Percentage of total segment duration}  \\ \hline \hline
-0.0 & 14.83 h & 10\% \\ \hline
-8 & 29.66 h & 20\% \\ \hline
-15 & 44.49 h & 30\% \\ \hline
-23 & 59.32 h & 40\% \\ \hline
-32 &  74.15 h & 50\% \\ \hline
-43 & 88.98 h & 60\% \\ \hline
-58 & 103.81 h & 70\% \\ \hline
-98 & 118.64 h & 80\% \\ \hline
-\end{tabular}
-\end{center}
-
-\subsubsection{Training Acoustic model AM.100-v1}
-
-
-
-%\begin{center}
-%\begin{tabular}{ | c | c | c | c |  c |  }
-%\hline
-%\textbf{No.} & \textbf{Description} & \textbf{Result} & \textbf{execution time} & \textbf{extra info} \\ \hline \hline
-%1 & GMM.100-v1 &  & 3h 28m 43s & 20 hosts \\  \hline
-%2 & TDNN.100-v1 &  & 26h 5m 3s & 3 hosts \\  \hline
-%3 & GMM.100-v1\_decode &  & 2h 51m 4s & 20 hosts \\  \hline
-%4 & TDNN.100-v1\_decode &  & 24h 30m 31s & 3 hosts \\  \hline
-%\end{tabular}
-%\end{center}
-
-
-\subsection{The Second Acoustic model(AM.100-v2) and Language Model version 1 (LM.200.1e-9)}
-
-
-%\begin{figure}
-%\caption{Graph of PMER and WMER produced transcription AM-V0 and LM s1. The red line represents PMER, while the blue line represents WMER.}
-%\includegraphics[scale=0.2]{wmerpmeram0s1} 
+%\begin{figure}[H]
+%\caption{Average phone duration}
+%\label{apd}
+%\includegraphics[scale=0.7]{apd} 
 %\centering
 %\end{figure}
 
-%\begin{figure}
-%\caption{Graph of PMER and WMER from transcription align, provided by MGB.}
-%\includegraphics[scale=0.2]{wmerpmeram0align}
-%\centering
-%\end{figure}
+% proposed combination 1 from 
+% proposed combination 2
+%different data set 1 from baseline 2
+%different data set 2 from different data set 1
 
-%\subsubsection{Training acoustic model AM.100-v2}
-%\begin{center}
-%\begin{tabular}{ | c | c | c | c |  c |  }
-%\hline
-%\textbf{No.} & \textbf{Description} & \textbf{Result} & \textbf{execution time} & \textbf{extra info} \\ \hline \hline
-%1 & GMM-V2\_decode &  & 2h 56m 41s & 20 hosts \\  \hline
-%2 & TDNN-V2\_decode &  & 23h 52m 58s & 3 hosts \\  \hline
-%\end{tabular}
-%\end{center}
-
-
-\section{Comparison}
-
-Comparison between different speech recognizer:
 \begin{center}
-\label{wmerAM0s1}
-\begin{tabular}{ | c | c | c |  c | c |  }
+\label{tab:proposedModel}
+\captionof{table}{WER and PER of baseline versus proposed model}
+\begin{tabular}{ | c | c | c | c | c |   }
 \hline
-\textbf{No.} & \textbf{Acoustic model} & \textbf{Language Model}  &  \textbf{PER}  & \textbf{WER}  \\ \hline \hline
-1 & TDNN.100  & LM.7weeks+subtitles.limited.1e-9 & 35.8  & 43.9 \\ 
-& & Lexicon.7weeks+subtitles  & & \\ \hline
-
-
-2 & TDNN.100-v1\_decode   & LM.7weeks+subtitles.limited.1e-9  & 34.3    & 42.3 \\
-&  & Lexicon.7weeks+subtitles & & \\ \hline
-
-3 & TDNN.100-v1   & LM.7weeks+subtitles.limited.1e-9  & 33.8   & 41.2 \\
-&  & Lexicon.7weeks+subtitles & & \\ \hline
-
-
-4 & TDNN.100-v2   & LM.7weeks+subtitles.limited.1e-9  & 33.3    & 40.5 \\
-&  & Lexicon.7weeks+subtitles & & \\ \hline
-
-5 & TDNN.100-v3   & LM.7weeks+subtitles.limited.1e-9  & 33.3    & 40.5 \\
-&  & Lexicon.7weeks+subtitles & & \\ \hline
+No.  & model name & WER(\%) & PER(\%) \\ \hline
+1  & baseline 1 & 41.2 & 33.8  \\ \hline
+2  & baseline 2 & 40.5 & 33.3  \\ \hline
+3 & proposed average & 41 & 33.7 \\ \hline
+4 & proposed combination 1 & 40.5 & 33.2 \\ \hline
+5 & proposed combination 2 &  41.6 & 33.7  \\ \hline
+6 & different data set 1 & 40.4 & 33.2 \\ \hline
+7 & different data set 2 & 40.7 & 33.6 \\ \hline
 \end{tabular}
 \end{center}
 
+\section{Execution time}
 
-\begin{figure}
-\caption{Average word duration}
-\includegraphics[scale=0.7]{awdLineChart}
-\centering
-\end{figure}
+Table \ref{tab:exectime} shows the execution time of each iteration. The most demanding process is to train an acoustic model. Furthermore, the second most demanding process is to recognize the full training set and select  a good subset of data from it. This is time consuming due to a massive volume of training data(around 200 hours of TV broadcasts). In overall, the execution time of each iteration roughly takes 43 hours. 
 
-\begin{figure}
-\caption{Phone match error rate}
-\includegraphics[scale=0.3]{pmerLineChart}
-\centering
-\end{figure}
+\begin{center}
+\label{tab:exectime}
+\captionof{table}{WER and PER of baseline versus proposed model}
+\begin{tabular}{ | c | c | c | c | c | c | c |   }
+\hline
+Itera & Train & Recognize \&  & Calculate & Decoding graph  & Decoding graph  & Total \\ 
+-tion & AM &  data selection & WER & with LM.200 &  with LM.7weeks+subs & \\ \hline
+0 & 21h & 16h & 1h & 6m & 5h & 43h  \\ \hline
+1 & 24h & 14h & 1h & 5m & 3h & 43h  \\ \hline
+\end{tabular}
+\end{center}
 
-\begin{figure}
-\caption{Word match error rate}
-\includegraphics[scale=0.25]{wmerLineChart}
-\centering
-\end{figure}
+\section{Discussion}
+This chapter provides the results of experiments of baseline and proposed approaches. In this section, we give a summary of our experiments and offer possible explanations for the obtained results.
+
+In baseline model, we showed a chart of PMER(see \ref{pmer}) produced by four iteration baseline models. The chart shows that the next iteration obtains more segments with zero PMER and lower PMER. The value of PMER decreases slightly in each iteration until it converges in the last iteration(iteration 2 and 3). The reason behind this is the data selection method has converged in Baseline 2. Furthermore, we compared the selected segments for training Baseline 2 and 3. They have the same subset of selected segments/utterances(with slightly reduced PMER values in Baseline 3) which explains why they have almost the same PMER.
+
+In addition to comparing PMER in the cumulative chart, we also evaluate each baseline model by computing word error rate of the development set. We did four iterations(baseline 0, 1, 2, and 3). The WER of the baseline model keeps decreasing in each iteration. In other word, we has shown that the data selection technique(inspired from \cite{Lanchantin2016}) works well in our data. Model baseline 2 and 3 have the same WER which denotes that the data selection has converged. Moreover, we experimented by modifying the baseline technique. 
+
+The first modification is we tried to use the decoding result as the training set for the next iteration. The result is not as good as using our original technique(using closed captions as the training set). The intuition of the bad performance is the PER of baseline 0 is 35.8\%; i.e. around 1 from 3 phones are incorrectly recognized. Therefore, the decoding result may be more terrible than the real transcriptions or even more terrible than the closed captions. The second modification is we tried to sort the segments by WMER in place of PMER. The result is worse than the baseline method. This is because we train an acoustic model which predicts sub phones(senone) from the acoustic inputs. Therefore, sorting by PMER is more likely to produce a better acoustic model(and of course better ASR because we use the same language model and lexicon) than sorting by WMER.
+
+Beside the baseline model, we experimented with three different proposed models. The idea behind the proposed models is by combining three different ASRs(the same acoustic model but different language models). The first proposed model is by averaging PMER and AWD and do data selection the same as the baseline method. The result is slightly worse than the baseline. The second proposed model is by combining the recognition of three ASRs by the algorithm proposed in Listing \ref{algoCombine}. We obtained slightly better PER and exactly the same value of WER compared to Baseline 2. Thus, we continued the iteration which resulted in the bad performance model. The reasoning is our combination algorithm tried to fix the closed captions by replacing with the decoding results if two ASRs agree. We hypothesize that our three ASRs are not different because we only utilize different language models(built with somewhat the same text corpus) and the same acoustic model. Therefore, if one ASR makes a mistake, the other probably makes the same mistake. The last proposed model is to recognize  randomly different training set for each iteration and do data selection from the training set. The first iteration shows better model than Baseline 2. However, the second iteration performs slightly worse than Baseline 2. We believe there is a luck factor in selecting the random training set. If the randomly selected set is well chosen, we obtain a better model; otherwise, the model will perform poorer. 
+
+In conclusion, we have experimented with the baseline model and we also proposed some methods. However, our proposed method does not work as well as we expected. The main reason behind it is we do not use and combine highly different automatic speech recognitions. Instead, we used the same acoustic model and three different language models, which are built from somewhat the same corpus. Therefore, it is necesarry to experiment and investigate more the combination of totally different acoustic model(trained on different architecture, different acoustic input, etc) and totally different language model(different text corpus, different parameters, etc). Due to the limited time constraint of the internship(the execution time of one iteration is long, see \ref{tab:exectime}), we do not have much opportunity to experiment further.
 
 
-
-
-%PER 32.2 | 9118 204786 | 75.0 10.0 15.0 7.2 32.2 82.7 | -1.058 | |
-%WER 49.3 | 9118 64248 | 59.0 25.1 15.9 8.2 49.3 83.7 | -0.822 | |
-
-%AM0_s1
-%WMER
-%[0, 0.05001182297101408, 0.1000055705823501, 0.15002999947778156, 0.20000377990423135, 0.250006911717846, 0.3000083202847346, 0.350008061797726, 0.4000080655439148, 0.45000218777410367, 0.5000070802963298, 0.5500076834326855, 0.6000113209817511, 0.6500022214898035, 0.7000031243212423, 0.7500004870045146, 0.8000498093227562, 0.8500152732106541]
-%[0, 0.0, 0.0, 0.05, 0.08, 0.12, 0.15, 0.19, 0.23, 0.27, 0.32, 0.37, 0.43, 0.5, 0.58, 0.71, 0.98, 4.67]
-
-%PMER
-%[0, 0.05000255115439209, 0.10000343525488571, 0.15000458158857732, 0.20000319924500873, 0.2500218028172682, 0.3000072338900607, 0.3500012437345947, 0.4000032891535333, 0.45000364878763255, 0.5000033341077957, 0.5500060913025576, 0.6000314567451253, 0.6500026335705453, 0.700001251226977, 0.7500149847541436, 0.8000220313347739, 0.8500007005372576]
-%[0, 0.0, 0.0, 0.02, 0.05, 0.07, 0.1, 0.13, 0.16, 0.2, 0.24, 0.28, 0.33, 0.39, 0.47, 0.59, 0.82, 4.43]
-
-%Align
-%WMER
-%([0, 0.050002832118532126, 0.10000931677088468, 0.15000742869186362, 0.20000679558600154, 0.2500274408310134, 0.30000118379557716, 0.3500026485552931, 0.40000639849001596, 0.4500279240893308, 0.5000118004938804, 0.5500090133296115, 0.6000040159141051, 0.6500046752432919, 0.7000030681284111, 0.7500003184260248, 0.800006522114234], [0, 0.0, 0.0, 5.26, 9.09, 13.51, 17.65, 22.22, 27.27, 32.43, 38.24, 44.44, 52.17, 61.11, 72.73, 88.89, 108.33], 'b-'
-
-%PMER
-%[0, 0.05001950265750902, 0.10000225520549781, 0.15000134113549585, 0.20000690797165727, 0.25000294075800095, 0.30001437037921774, 0.35000064434442896, 0.40001250477732614, 0.45001977612927163, 0.5000107890229769, 0.5500005656744683, 0.60003347968693, 0.6500121301584764, 0.7000086499493287, 0.7500019667489803, 0.800000340903153], [0, 0.0, 0.0, 3.33, 6.67, 10.0, 13.48, 17.24, 21.35, 25.94, 30.91, 36.67, 43.32, 51.52, 61.82, 76.47, 100.0], 'r-'
 

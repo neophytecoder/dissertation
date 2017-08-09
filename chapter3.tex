@@ -1,6 +1,9 @@
 \chapter{Methodology}
 
+%\section{Overview}
+
 \section{Lightly supervised data selection approach}
+\label{lsselection}
 Despite of the high development in automatic speech recognition, there exist many challenges. One of the main challenge of speech recognition is to reduce development cost when adapting the speech recognition to other task or creating a new speech recognition for a new language. The biggest development cost is to transcribe the audio data with their exact corresponding transcriptions. To generate a "good" speech recognition, one needs a massive number of training audio and their exact transcriptions. However, transcribing audio is labor intensive and time consuming too. There are unlimited supply of audio data in the internet, television, radio, and other sources. Nonetheless, they usually have a few or even no accurate transcription at all.  Some television broadcasts have corresponding closed captions.  Closed caption means that the transcription is close, but not exactly the same as what the audio says. Even, the closed captions are often badly time-aligned with the audio.
 
 By utilizing these audio data with the corresponding closed captions, we hope to produce a high performance speech recognizer with less supervision. The main idea is to use the automatic speech recognizer to transcribe audio data which will automatically generate transcriptions, which later be used as training data \cite{lightlySupervised}. The steps are as following. Firstly, we train a bootstrap acoustic model trained on a small manually annotated data. Then, recognize the data with closed captions by using the bootstrap model. We compare the decoding result from the bootstrap model with the closed captions and remove the words which do not agree. Finally, we can train a new acoustic model from the filtering.
@@ -25,6 +28,7 @@ In addition to the closed captions, we can use additional data to build a langua
 Despite the fact that closed captions are not accurate, it has been proven that closed captions provides enough supervision in building automatic speech recognition systems \cite{lightlySupervised}. Lamel found that an increase in training data improves accuracy even tough it will increase the model size. Additionally, filter closed captions for the next iteration training set in the lightly supervised technique improves the accuracy slightly. The language model built from closed captions also effectively provides enough supervision in building the ASR. Therefore, lightly supervised technique is our main inspiration to do data selection in this internship.
 
 \section{State-of-the-art data selection}
+\label{stateoftheart}
 Some researches have been conducted to investigate the lightly supervised approach to select data in the speech recognition problem\cite{lightlySupervised,Lecouteux06imperfecttranscript,Chan,Mathias,Stolcke00anefficient}. The state-of-the-art data selection was proposed by  Lanchantin et al from Cambridge university\cite{Lanchantin2016}. Before talking about the state-of-the-art, it is better to discuss some previous related works first.
 
 Lamel et al proposed the lightly supervised approach which harnessed the closed caption as supervision to build a robust speech recognizer\cite{lightlySupervised}. In their experiment, they used a bootstrap acoustic model and biased language model to recognize the audio where the decoding result is compared with the closed caption. Then, the words which do not agree will be removed from training dataset. The new training dataset is utilized to train a  new acoustic model. This filtering(removing not-agree words) is called closed caption filtering.
@@ -61,354 +65,114 @@ Before talking about the methodology, it is better to talk about the dataset. We
 \item Additional text corpus which is utilized for building language model. This additional corpus is different than the closed captions in training set. 
 \end{enumerate}
 
-
-
-
 \section{Baseline model}
-
-\subsection{Language model}
-
-\subsection{Acoustic model}
+Inspired by the lightly supervised approach(explained in \ref{lsselection})  and the state-of-the-art data selection approach (explained in \ref{stateoftheart}), we developed our baseline model. This baseline model is a benchmark for our proposed model to determine whether the proposed model thrives against the baseline. This section starts with the general explanation of the data selection. Furthermore, we dive deeply into how to build the acoustic model as well as the language model and combine them into a speech recognition system for data selection.
 
 \subsection{Data selection}
+\label{ch3:dataselection}
+The data selection will be divided into two process pipeline which are intertwined together. The first pipeline is to select data and the second one is to evaluate how good the data selection is. The evaluation pipeline is  also important to know when to stop the iteration of the data selection pipeline.   
 
-\section{Baseline model}
-
-
-%\textbf{Insert time and perpelexity here.}
-
-\section{Baseline model}
-
-\subsection{Acoustic model AM.200 and Language Model Version 1 (LM.200.1e-9)}
-\label{amv0s1}
-
-
-Calculating PMER and WMER for each segment by utilizing AM.200 and LM.200.1e-9:
+Figure \ref{selectionPipeline} demonstrates the overall data selection pipeline. Here is the explanation how it works:
 \begin{enumerate}
-\item GMM(GMM.200): GMM is trained by using the 200 hours data
-\item TDNN(TDNN.200): the result of GMM training(GMM.200) is utilized to build a TDNN(time delay neural network). 
-\item TDNN graph creation \\
-The language model used is the LM.200.1e-9 and  the acoustic model is  TDNN.200; furthermore, the dictionary used(Lexicon.200) is the modification of the library provided by MGB(Lexicon.MGB). Words in Lexicon.MGB which do not exist in word.200 are removed from Lexicon.200.
-%\item TDNN development set recognition \\
-%The development set is files from dev.short, which contains 8 hours of audio. The development set is recognized by leveraging the graph created in the previous step.
-\item TDNN 200 hours of training data recognition \\
-We need to recognize 200 hours data to calculate PMER, WMER, and AWD. This data will be used for data selection of the next iteration.
-\item Sclite score PMER and WMER \\
-Use the lattice and graph(produced at step 5 and 3 respectively) to calculate overall PMER and WMER. However, the decoding program does not provide PMER, WMER, and AWD for each segment. Fortunately, the program generates prf file which contains number of correction, insertion, deletion, and substitution for each segment. Two prf files exist after decoding:(ctm\_words.filt.filt.prf contains word match error rate and ctm\_phones.filt.filt.prf contains phone match error rate). From there, we are able to calculate  PMER, WMER, and AWD of each segments.  For the development set, we only need to know the overall PER and WER. In contrast, training set recognition needs PMER, WMER, and AWD for each segment. 
+\item Build a more constrained language model. In the data selection, we have two different language models: the more constrained and  the less constrained language model. The more constrained is built from the closed captions of the full training set. In contrast, the less constrained language model is built from interpolation of the closed caption language model and the additional text corpus language model. The more and less constrained is utilized in the data selection and evaluation pipeline respectively.
+\item Randomly select a subset of the training set. The small training set is used to train an initial acoustic model(acoustic model 0). 
+\item Train an initial acoustic model(acoustic model 0) by utilizing the audio and the closed captions in the small training set. 
+\item Decode the full training set with the acoustic model 0, the more constrained language model, and the lexicon. This will produce the new decoding results and new values of PMER and AWD.  The new values of PMER and AWD are obtained from comparing the closed captions and the decoding results.  Minimum edit distance is the algorithm to compare and compute how many substitutions, deletions, and insertions. After 
 
+\item Select the closed captions from the training set based on PMER and AWD. This will be the new training set for training the next acoustic model. The selection works as following:
+	\begin{enumerate}
+	\item Select the segments which have AWD within the range $0.166 \le AWD \le 0.65$. This range follows the range which was used in \cite{Lanchantin2016}.
+	\item Sort the segments based on the new value of PMER ascendingly. 
+	\item Choose the top segments to make a new small training set.
+	\end{enumerate}
+\item Continue the step 3-5 until the data selection does not improve anymore. 
 \end{enumerate}
 
 
-version AM0
-% table
-\begin{center}
-\begin{tabular}{ | c | c | c | c |  c |  }
-\hline
-\textbf{No.} & \textbf{Description} & \textbf{Result} & \textbf{execution time} & \textbf{extra info} \\ \hline \hline
-1 & GMM.100  &  & 3h 30m & 20 hosts \\  \hline
-%/talc2/multispeech/calcul/users/jkarsten/mgb/recipe/tools/baseline/baseline1_backup/gmm
-%1.1 & GMM decoding & 57.2\% WER  & 3h 36m 47s & 20 hosts, 4 cores \\  \hline \hline
-%2 & AM.200 training. &  & 38h 30m 31s & 3 nodes \\  
-
-2 & TDNN.100 training: & & 17h 7m & 3 GPU hosts \\ 
- & LM.200.1e-9,  GMM.100, Lexicon.200 &  & & \\ \hline
- %/talc2/multispeech/calcul/users/jkarsten/mgb/recipe/tools/baseline/baseline1_backup/tdnn
- 
-3 & Create a graph from TDNN.200,  &  & 6m & 1 host \\  
- & LM.200.1e-9, Lexicon.200  & & & \\ \hline
-%/talc2/multispeech/calcul/users/jkarsten/mgb/recipe/tools/modifASR/tdnn_s1/graph_creation_from_arpaLM
-
-4 & Create a graph from TDNN.200,  &   & 4h 49m & 1 host \\  
- & LM.7weeks+subtitles.1e-9, Lexicon.200  & & & \\ \hline
-
-%4 & AM.200 recognized dev.short &  & 2h 58m 58s   & 20 hosts  \\  \hline
-5 & TDNN.100 recognized train.200 &  & 16h 6m & 20 hosts \\  \hline 
- %/talc2/multispeech/calcul/users/jkarsten/mgb/recipe/tools/modifASR/tdnn_s1/recognition_with_scoring/decode_res_train_200_fst+merall_mgb2015.wordList.4gm.kn.arpa.gz.1e-9.arpa_4thr
-
-6 & TDNN.100 \& LM.7weeks+subtitles.1e-9 & WER 43.9\%   & 45m & 20 hosts \\  
-&  recognized dev.short & PER 35.8\% & & \\ \hline
-%5 & Calculate Overall PMER & 24.8 \% PMER   & 5h 5m 51s & 1 host \\  \
- %& and WMER of train.200  & 32.4 \% WMER & & \\ \hline
-%5.1 &  Calculate PMER and WMER & & 20m 22s & 1 host \\  
- %&  per segment of step 6 & & &  \\  \hline
-%/talc2/multispeech/calcul/users/jkarsten/mgb/recipe/tools/modifASR/tdnn_s1/sclite_score_pmer_and_wmer
-% /talc2/multispeech/calcul/users/jkarsten/mgb/recipe/tools/modifASR/tdnn_s1/calculate_pmer_wmer_per_segments
-
-%6 & Calculate PER  &  32.5 \% PER  & 1h 10m 57s   & 1 host \\  \
-% & PMER, WMER calculation  &   48.7\% WER   & & \\ \hline
-\end{tabular}
-\end{center}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% table
-version AM1
-\begin{center}
-\begin{tabular}{ | c | c | c | c |  c |  }
-\hline
-\textbf{No.} & \textbf{Description} & \textbf{Result} & \textbf{execution time} & \textbf{extra info} \\ \hline \hline
-1 & GMM.100  &  & 4h 7m & 20 hosts \\  \hline
-
-2 & TDNN.100 training: & & 20h 1m & 3 GPU hosts \\ 
- & LM.200.1e-9,  GMM.100, Lexicon.200 &  & & \\ \hline
- 
-3 & Create a graph from TDNN.200,  &  & 5m & 1 host \\  
- & LM.200.1e-9, Lexicon.200  & & & \\ \hline
- 
-4 & Create a graph from TDNN.200,  &   & 3h 7m & 1 host \\  
- & LM.7weeks+subtitles.1e-9, Lexicon.200  & & & \\ \hline
-
-5 & TDNN.100 recognized train.200 &  & 14h 18m & 20 hosts \\  \hline 
-
-6 & TDNN.100 \& LM.7weeks+subtitles.1e-9 & WER 41.2\%   & 46m & 20 hosts \\  
-&  recognized dev.short & PER 33.8\% & & \\ \hline
-\end{tabular}
-\end{center}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-version AM2
-\begin{center}
-\begin{tabular}{ | c | c | c | c |  c |  }
-\hline
-\textbf{No.} & \textbf{Description} & \textbf{Result} & \textbf{execution time} & \textbf{extra info} \\ \hline \hline
-1 & GMM.100  &  & 3h 3m & 20 hosts \\  \hline
-
-2 & TDNN.100 training: & & 23h 58m & 3 GPU hosts \\ 
- & LM.200.1e-9,  GMM.100, Lexicon.200 &  & & \\ \hline
- 
-3 & Create a graph from TDNN.200,  &  & 5m & 1 host \\  
- & LM.200.1e-9, Lexicon.200  & & & \\ \hline
- 
-4 & Create a graph from TDNN.200,  &   & 3h 13m & 1 host \\  
- & LM.7weeks+subtitles.1e-9, Lexicon.200  & & & \\ \hline
-
-5 & TDNN.100 recognized train.200 &  & 15h 51m & 20 hosts \\  \hline 
-
-6 & TDNN.100 \& LM.7weeks+subtitles.1e-9 & WER 40.5\%   & 36m & 20 hosts \\  
-&  recognized dev.short & PER 33.3\% & & \\ \hline
-\end{tabular}
-\end{center}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-version AM2
-\begin{center}
-\begin{tabular}{ | c | c | c | c |  c |  }
-\hline
-\textbf{No.} & \textbf{Description} & \textbf{Result} & \textbf{execution time} & \textbf{extra info} \\ \hline \hline
-1 & GMM.100  &  & 3h 3m & 20 hosts \\  \hline
-
-2 & TDNN.100 training: & & 25h 27m & 3 GPU hosts \\ 
- & LM.200.1e-9,  GMM.100, Lexicon.200 &  & & \\ \hline
- 
-3 & Create a graph from TDNN.200,  &  & 7m & 1 host \\  
- & LM.200.1e-9, Lexicon.200  & & & \\ \hline
- 
-4 & Create a graph from TDNN.200,  &   & 4h 49m & 1 host \\  
- & LM.7weeks+subtitles.1e-9, Lexicon.200  & & & \\ \hline
-
-5 & Create a graph from TDNN.200,  &   & 2h 1m each genre & 1 host \\  
- & LM.genres.1e-9, Lexicon.200  & & & \\ \hline
-
-6 & TDNN.100 recognized train.200 &  & 15h 52m & 20 hosts \\  \hline 
-
-7 & TDNN.100 \& LM.7weeks+subtitles.1e-9 & WER 40.5\%   & 38m & 20 hosts \\  
-&  recognized dev.short & PER 33.3\% & & \\ \hline
-\end{tabular}
-\end{center}
+The last step from the data selection pipeline says to do iteration over and over again until the technique does not improve. The technique improves when selecting the closed captions which are closed to the real transcription. However, until some points, it may select the data which can not improve the acoustic model or even the same data in the next iteration. Therefore, the evaluation pipeline is necessary to know when to evaluate how good the data selection is and stop the iteration. Figure \ref{evaluationPipeline} illustrates the evaluation pipeline. Here is the explanation how it works:
+\begin{enumerate}
+\item In each iteration, a new acoustic model is trained.
+\item By utilizing the acoustic model, the less constrained LM, and the lexicon, the development set is decoded. By comparing the decoding result and the real transcription in the development set, one obtains the word error rate. The word error rate is the metric to evaluate the data selection. If the WER decreases in  the next iteration compare to the previous iteration, the data selection improves; otherwise, it stops improving and we can stop the iteration.
+\end{enumerate}
 
 
 
-%\subsection{Acoustic model AM.200 and Language Model LM.7weeks+subtitles.limited.1e-9}
-% table
-%\begin{center}
-%\begin{tabular}{ | c | c | c | c |  c |  }
-%\hline
-%\textbf{No.} & \textbf{Description} & \textbf{Result} & \textbf{execution time} & \textbf{extra info} \\ \hline \hline
-%3 & Create a graph from TDNN.200,  &  & 3h 12m 25s & 1 host \\   
-% & LM.7weeks+subtitles.limited.1e-9,   & & & \\ 
-% & Lexicon.7weeks+subtitles & & & \\ \hline
- %/talc2/multispeech/calcul/users/jkarsten/mgb/recipe/tools/modifASR/tdnn_s2/graph_creation_from_arpaLM
-
-
-%4 & TDNN.200 &  & 1h 10m 59s & 20 hosts \\  
-% & recognized dev.short & & & \\ \hline
-% /talc2/multispeech/calcul/users/jkarsten/mgb/recipe/tools/modifASR/tdnn_s2/recognition_human/recognition_with_scoring_human
-
-
- %5 & TDNN.200 recognized &  & 10h 9m 35s & 20 hosts \\  
- %& train.200 & & & \\ \hline  
- %/talc2/multispeech/calcul/users/jkarsten/mgb/recipe/tools/modifASR/tdnn_s2/recognition_with_scoring
- 
-% 6 & TDNN AM.200 dev short & 31.8\% PER  & 4h 58m 26s & 1 hosts \\  
-% & PMER, WMER calculation & 49.5\% WER & & \\ \hline
-% 6.1 & TDNN AM-V0 train 200 & 26.4\% PMER & 4h 58m 26s & 1 hosts \\  
-% & PMER, WMER calculation & 39.7\% WMER  & & \\ \hline
-% 6.2 & Calculate PMER, WMER &  &  & 1 hosts \\  
- %& AWD per segment &  & & \\ \hline \hline
-%\end{tabular}
-%\end{center}
-
-
-\subsection{Acoustic model(AM.200) and Language Model version 3(LM.genres)}
-
-
-\subsection{Acoustic model AM.100-v1 and Language Model version 1 (LM.200.1e-9)}
-% table
-\subsubsection{100 hours selection(100-v1)}
-How to select 100 hours subset of data for baseline model v1:
-Section \ref{amv0s1}  calculates PMER, WMER, and AWD for each segments. Consequently, we can extract segments(of 200 hours transcriptions) which satisfy $0.165 \le AWD \le 0.66$. In the other word, the segments which does not satisfy are removed. Then, segments are sorted based on their PMER in ascending. We can deduce PMER threshold  and its total duration by sorting PMER as presented in the following table:  
-\begin{center}
-\label{pmerAM0s1}
-\begin{tabular}{ | c | c | c | }
-\hline
-\textbf{PMER} & \textbf{Total duration} & \textbf{Percentage of total segment duration}  \\ \hline \hline
-0.0 & 14.83 h & 10\% \\ \hline
-5 & 29.66 h & 20\% \\ \hline
-10 & 44.49 h & 30\% \\ \hline
-16 & 59.32 h & 40\% \\ \hline
-24 &  74.15 h & 50\% \\ \hline
-33 & 88.98 h & 60\% \\ \hline
-47 & 103.81 h & 70\% \\ \hline
-82 & 118.64 h & 80\% \\ \hline
-\end{tabular}
-\end{center}
-
-
-%PMER: 0.0; duration: 53389.43; percentage: 0.100003435255
-%PMER: 0.05; duration: 106776.9; percentage: 0.200003199245
-%PMER: 0.1; duration: 160166.65; percentage: 0.30000723389
-%PMER: 0.16; duration: 213552.14; percentage: 0.400003289154
-%PMER: 0.24; duration: 266939.76; percentage: 0.500003334108
-%PMER: 0.33; duration: 320342.37; percentage: 0.600031456745
-%PMER: 0.47; duration: 373713.84; percentage: 0.700001251227
-%PMER: 0.82; duration: 427112.53; percentage: 0.800022031335
-
-The Table \ref{pmerAM0s1} shows that 60\% of data has 33\% PMER with total duration of 88.98 hours of audio. From the table, we conclude that threshold 33 is selected as the threshold to select data for the next iteration.
-
-\begin{center}
-\label{wmerAM0s1}
-\begin{tabular}{ | c | c | c | }
-\hline
-\textbf{WMER} & \textbf{Total duration} & \textbf{Percentage of total segment duration}  \\ \hline \hline
-0.0 & 14.83 h & 10\% \\ \hline
-8 & 29.66 h & 20\% \\ \hline
-15 & 44.49 h & 30\% \\ \hline
-23 & 59.32 h & 40\% \\ \hline
-32 &  74.15 h & 50\% \\ \hline
-43 & 88.98 h & 60\% \\ \hline
-58 & 103.81 h & 70\% \\ \hline
-98 & 118.64 h & 80\% \\ \hline
-\end{tabular}
-\end{center}
-
-\subsubsection{Training Acoustic model AM.100-v1}
-
-
-
-%\begin{center}
-%\begin{tabular}{ | c | c | c | c |  c |  }
-%\hline
-%\textbf{No.} & \textbf{Description} & \textbf{Result} & \textbf{execution time} & \textbf{extra info} \\ \hline \hline
-%1 & GMM.100-v1 &  & 3h 28m 43s & 20 hosts \\  \hline
-%2 & TDNN.100-v1 &  & 26h 5m 3s & 3 hosts \\  \hline
-%3 & GMM.100-v1\_decode &  & 2h 51m 4s & 20 hosts \\  \hline
-%4 & TDNN.100-v1\_decode &  & 24h 30m 31s & 3 hosts \\  \hline
-%\end{tabular}
-%\end{center}
-
-
-\subsection{The Second Acoustic model(AM.100-v2) and Language Model version 1 (LM.200.1e-9)}
-
-
-%\begin{figure}
-%\caption{Graph of PMER and WMER produced transcription AM-V0 and LM s1. The red line represents PMER, while the blue line represents WMER.}
-%\includegraphics[scale=0.2]{wmerpmeram0s1} 
-%\centering
-%\end{figure}
-
-%\begin{figure}
-%\caption{Graph of PMER and WMER from transcription align, provided by MGB.}
-%\includegraphics[scale=0.2]{wmerpmeram0align}
-%\centering
-%\end{figure}
-
-%\subsubsection{Training acoustic model AM.100-v2}
-%\begin{center}
-%\begin{tabular}{ | c | c | c | c |  c |  }
-%\hline
-%\textbf{No.} & \textbf{Description} & \textbf{Result} & \textbf{execution time} & \textbf{extra info} \\ \hline \hline
-%1 & GMM-V2\_decode &  & 2h 56m 41s & 20 hosts \\  \hline
-%2 & TDNN-V2\_decode &  & 23h 52m 58s & 3 hosts \\  \hline
-%\end{tabular}
-%\end{center}
-
-
-\section{Comparison}
-
-Comparison between different speech recognizer:
-\begin{center}
-\label{wmerAM0s1}
-\begin{tabular}{ | c | c | c |  c | c |  }
-\hline
-\textbf{No.} & \textbf{Acoustic model} & \textbf{Language Model}  &  \textbf{PER}  & \textbf{WER}  \\ \hline \hline
-1 & TDNN.100  & LM.7weeks+subtitles.limited.1e-9 & 35.8  & 43.9 \\ 
-& & Lexicon.7weeks+subtitles  & & \\ \hline
-
-
-2 & TDNN.100-v1\_decode   & LM.7weeks+subtitles.limited.1e-9  & 34.3    & 42.3 \\
-&  & Lexicon.7weeks+subtitles & & \\ \hline
-
-3 & TDNN.100-v1   & LM.7weeks+subtitles.limited.1e-9  & 33.8   & 41.2 \\
-&  & Lexicon.7weeks+subtitles & & \\ \hline
-
-
-4 & TDNN.100-v2   & LM.7weeks+subtitles.limited.1e-9  & 33.3    & 40.5 \\
-&  & Lexicon.7weeks+subtitles & & \\ \hline
-
-5 & TDNN.100-v3   & LM.7weeks+subtitles.limited.1e-9  & 33.3    & 40.5 \\
-&  & Lexicon.7weeks+subtitles & & \\ \hline
-\end{tabular}
-\end{center}
-
-
-\begin{figure}
-\caption{Average word duration}
-\includegraphics[scale=0.7]{awdLineChart}
-\centering
-\end{figure}
-
-\begin{figure}
-\caption{Phone match error rate}
-\includegraphics[scale=0.3]{pmerLineChart}
-\centering
-\end{figure}
-
-\begin{figure}
-\caption{Word match error rate}
-\includegraphics[scale=0.25]{wmerLineChart}
+\begin{figure}[H]
+\caption{Evaluation pipeline}
+\label{evaluationPipeline}
+\includegraphics[scale=0.65]{EvaluationPipeline} 
 \centering
 \end{figure}
 
 
+\begin{figure}[H]
+\caption{Data selection pipeline}
+\label{selectionPipeline}
+\includegraphics[scale=0.5]{DataSelection} 
+\centering
+\end{figure}
 
 
-%PER 32.2 | 9118 204786 | 75.0 10.0 15.0 7.2 32.2 82.7 | -1.058 | |
-%WER 49.3 | 9118 64248 | 59.0 25.1 15.9 8.2 49.3 83.7 | -0.822 | |
+\subsection{Building the speech recognition systems}
+The previous section explains the data selection process. Nevertheless, it does not elaborate the way to train the acoustic model and decode. This section elaborates how the speech recognizer works together as illustrated in the figure \ref{ASRchart}.
 
-%AM0_s1
-%WMER
-%[0, 0.05001182297101408, 0.1000055705823501, 0.15002999947778156, 0.20000377990423135, 0.250006911717846, 0.3000083202847346, 0.350008061797726, 0.4000080655439148, 0.45000218777410367, 0.5000070802963298, 0.5500076834326855, 0.6000113209817511, 0.6500022214898035, 0.7000031243212423, 0.7500004870045146, 0.8000498093227562, 0.8500152732106541]
-%[0, 0.0, 0.0, 0.05, 0.08, 0.12, 0.15, 0.19, 0.23, 0.27, 0.32, 0.37, 0.43, 0.5, 0.58, 0.71, 0.98, 4.67]
+Before training an acoustic model, it is necessary to turn the audio data into a sequence of acoustic feature. The audio will be divided into small chunks and each chunk will be converted into a feature vector. 
 
-%PMER
-%[0, 0.05000255115439209, 0.10000343525488571, 0.15000458158857732, 0.20000319924500873, 0.2500218028172682, 0.3000072338900607, 0.3500012437345947, 0.4000032891535333, 0.45000364878763255, 0.5000033341077957, 0.5500060913025576, 0.6000314567451253, 0.6500026335705453, 0.700001251226977, 0.7500149847541436, 0.8000220313347739, 0.8500007005372576]
-%[0, 0.0, 0.0, 0.02, 0.05, 0.07, 0.1, 0.13, 0.16, 0.2, 0.24, 0.28, 0.33, 0.39, 0.47, 0.59, 0.82, 4.43]
+The hybrid HMM acoustic model is the approach to build the language model as explained in the section \ref{HybridAcousticModel}. Training TDNN needs a training dataset which has training labels. Nevertheless, the training dataset only has several utterances with start and end time. It is our job to label each acoustic feature input(each small chunk of acoustic audio) with their corresponding senone. GMM-HMM is able to be trained  on  the flat start. The closed captions and the audio data are  the inputs of GMM acoustic model training. After training GMM, GMM forces alignment of each audio chunk and label them with their senone. Closed captions might not be perfect for GMM force alignment since they are not exactly the same as the real transcription.  The word error rate may be poor in the first iteration; thus we need to do data selection in the next iteration. 
 
-%Align
-%WMER
-%([0, 0.050002832118532126, 0.10000931677088468, 0.15000742869186362, 0.20000679558600154, 0.2500274408310134, 0.30000118379557716, 0.3500026485552931, 0.40000639849001596, 0.4500279240893308, 0.5000118004938804, 0.5500090133296115, 0.6000040159141051, 0.6500046752432919, 0.7000030681284111, 0.7500003184260248, 0.800006522114234], [0, 0.0, 0.0, 5.26, 9.09, 13.51, 17.65, 22.22, 27.27, 32.43, 38.24, 44.44, 52.17, 61.11, 72.73, 88.89, 108.33], 'b-'
+After force aligning and labelling the acoustic inputs, TDNN acoustic model is trained. The TDNN acoustic model, the less constrained language model, and the lexicon are combined together to make a decoding graph. The decoding graph is based on weighted finite state transducer(WFST). WFST is a finite automata whose state transition is labeled with input, output, and a weight which encodes a probability to go to the next state. The transition maps the input symbol sequence to an output string. WFST is able to encode HMM, lexicon, and n-gram language model \cite{Mohri2008}. Thus, WFST is a perfect representation which maps the acoustic input to a word string. 
 
-%PMER
-%[0, 0.05001950265750902, 0.10000225520549781, 0.15000134113549585, 0.20000690797165727, 0.25000294075800095, 0.30001437037921774, 0.35000064434442896, 0.40001250477732614, 0.45001977612927163, 0.5000107890229769, 0.5500005656744683, 0.60003347968693, 0.6500121301584764, 0.7000086499493287, 0.7500019667489803, 0.800000340903153], [0, 0.0, 0.0, 3.33, 6.67, 10.0, 13.48, 17.24, 21.35, 25.94, 30.91, 36.67, 43.32, 51.52, 61.82, 76.47, 100.0], 'r-'
+When decoding an audio dataset, the decoder does not return the most probable sentence given the acoustic inputs. Instead, it returns a directed graph containing the subset of possible paths to generate a probable sentence. This directed graph is called lattice. The nodes in lattice represent points in time, while the transitions represent states of combination acoustic model, language model, and lexicon. The lattice can be used later for decoding and rescoring with different language model or acoustic model \cite{Murveit1993}. From the generated lattice, we can search the best sequence with different and more sophisticated(but slower to do) configuration or more complex language model.
+
+
+\begin{figure}[H]
+\caption{Training and decoding with the speech recognition system}
+\label{ASRchart}
+\includegraphics[scale=0.5]{TrainingAM} 
+\centering
+\end{figure}
+
+\section{New proposed models}
+\label{proposedModels}
+The general idea of the proposed models is to combine three different automatic speech recognition(ASR) systems by varying the language model but the same acoustic model. Combining three different ASRs is expected to complement and fix other ASR's mistake. 
+
+The language models are built with different constraints(the least, medium, and the most constraint language models). The proposed models work almost the same as the baseline model: training acoustic model with the subset of training data(audio data and their closed captions), recognizing and selecting the full training data, and repeating the steps to do more data selection. However, the difference is when recognizing and selecting data. Three different ASRs recognize the full training set, combine, and select the decoding results as following:
+\begin{enumerate}
+\item Average PMER and AWD of three ASRs. \\
+Three different ASRs recognize the full training set and compute new values of PMER and AWD. Each corresponding segment in three ASRs averages their PMER and AWD. The average PMER and AWD are utilized to do the data selection(the same data selection as explained in the baseline model).
+
+\item Combine PMER and AWD of three ASRs with a proposed combination algorithm \\
+Here is the pseudocode how the algorithm works.
+\begin{lstlisting}[caption={the proposed combination algorithm}, label={algoCombine}]
+For each segment:
+    Keep only segments which are in 0.166<AWD<0.65 
+    and 0.03<APD(Average phone duration)<0.25 range
+        If one ASR segment has zero PMER, 
+            Select the segment and corresponding closed 
+            captions
+        Else 
+            If two segments have the same phone sequence 
+                Select the segment and the corresponding 
+                decoding result transcription 
+            Else 
+                Sort by PMER. Choose top segments with 
+                the lowest PMER. The closed captions will 
+                be chosen.
+\end{lstlisting}
+There are some intuitions behind the pseudocode:
+\begin{itemize}
+\item Average phone duration(APD) is introduced to detect whether the segments are properly recognized by the speech recognizer in phone level. In contrast, AWD  The duration of a phone must be between 0.03 second and 0.25 second.
+
+\begin{equation}
+APD = \frac{\#\textrm{phones in the segments}}{\textrm{duration of the segment}}
+\end{equation}
+
+\item Line 8-10 is expected to fix the closed captions with the correct transcription. The closed captions are not exactly the same as the real transcriptions. When two different ASRs yield exactly the same decoding transcription, the decoding transcriptions probably matches closer to the real transcription compared to the corresponding closed captions.
+
+\end{itemize}
+
+\item Utilize a randomly different training set for each iteration. \\
+In our baseline model, we always recognize the same full training set and select the best subset from the training set. Instead of using the same training set, we randomly choose a new full training set with more or less the same total speech duration. The intuition behind this is randomness may increase the performance of the model.
+
+\end{enumerate}
 

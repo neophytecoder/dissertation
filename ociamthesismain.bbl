@@ -30,10 +30,23 @@ H.Y. Chan and P.~Woodland.
 \newblock In {\em 2004 {IEEE} International Conference on Acoustics, Speech,
   and Signal Processing}. {IEEE}.
 
+\bibitem{Dahl2011}
+George~E. Dahl, Dong Yu, Li~Deng, and Alex Acero.
+\newblock Large vocabulary continuous speech recognition with context-dependent
+  {DBN}-{HMMS}.
+\newblock In {\em 2011 {IEEE} International Conference on Acoustics, Speech and
+  Signal Processing ({ICASSP})}. {IEEE}, may 2011.
+
 \bibitem{Hermansky99temporalpatterns}
 Hynek Hermansky and Sangita Sharma.
 \newblock Temporal patterns (traps) in asr of noisy speech.
 \newblock In {\em in Proc. ICASSP}, pages 289--292, 1999.
+
+\bibitem{38130}
+Navdeep Jaitly, Patrick Nguyen, Andrew Senior, and Vincent Vanhoucke.
+\newblock Application of pretrained deep neural networks to large vocabulary
+  speech recognition.
+\newblock In {\em Proceedings of Interspeech 2012}, 2012.
 
 \bibitem{Jurafsky:2009:SLP:1214993}
 Daniel Jurafsky and James~H. Martin.
@@ -112,6 +125,19 @@ Nima Mesgarani, Shihab Shamma, and et~al.
 \newblock Speech discrimination based on multiscale spectro-temporal
   modulations.
 \newblock In {\em IN PROC. ICASSP}, pages 601--604, 2004.
+
+\bibitem{Mohri2008}
+Mehryar Mohri, Fernando Pereira, and Michael Riley.
+\newblock Speech recognition with weighted finite-state transducers.
+\newblock In {\em Springer Handbook of Speech Processing}, pages 559--584.
+  Springer Berlin Heidelberg, 2008.
+
+\bibitem{Murveit1993}
+H.~Murveit, J.~Butzberger, V.~Digalakis, and M.~Weintraub.
+\newblock Large-vocabulary dictation using sri's decipher speech recognition
+  system: progressive search techniques.
+\newblock In {\em {IEEE} International Conference on Acoustics Speech and
+  Signal Processing}. {IEEE}, 1993.
 
 \bibitem{Patel2010}
 Ibrahim Patel and Y.~Srinivas Rao.

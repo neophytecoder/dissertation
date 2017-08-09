@@ -57,7 +57,8 @@ The below code is an example how to make a 4-gram language model with input from
 ngram-count -order 4 -kndiscount -interpolate -sort -text CORPUS -lm LM
 \end{verbatim}
 
-\subsubsection{Execution}
+\subsubsection{Implementation}
+\label{3LM}
 This internship experimented with three different kinds of language model for speech recognition. All language models are based on four gram language model. We will describe language model from the most constraint to the less constraint
 \begin{enumerate}
 \item LM.200 \\
@@ -216,7 +217,8 @@ Firstly, the segments are sorted based on the new PMER. Secondly, choose the top
 
 \subsubsection{Evaluation}
 To evaluate how good our data selection is, we need to evaluate the automatic speech recognizer(especially the acoustic model). In every iteration, we train an acoustic model; furthermore, the acoustic model and together with the language model(LM.7weeks+subtitles.limited.1e-9) as well as the lexicon, we recognize the development set. After decoding and computing WER of development set, we compare the WER with the previous iteration. If the new WER is lower, we can continue the iteration; otherwise, stop the iteration. 
- 
+
+\subsubsection{Experiments}
 
 \section{Experiment resources}
 To run our experiment, we utilized grid 5000 server cluster. Grid 5000 is a computing cluster with a focus on parallel and distributed computing \cite{Grid5000}. It has several key features:
