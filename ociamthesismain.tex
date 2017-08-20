@@ -62,7 +62,7 @@ framexleftmargin=20pt
 
 
 \maketitle                  % create a title page from the preamble info
-\include{dedication}        % include a dedication.tex file
+%\include{dedication}        % include a dedication.tex file
 \include{acknowlegements}   % include an acknowledgements.tex file
 \include{abstract}          % include the abstract
 
@@ -71,12 +71,12 @@ framexleftmargin=20pt
 \listoffigures              % generate and include a list of figures
 \end{romanpages}            % end roman page numbering
 
-%now include the files of latex for each of the chapters etc
+%now include the files of latex for each of the chapters ect
 \include{chapter1}
 \include{chapter2}
 \include{chapter3} 
 \include{chapter4} 
-\include{chapter5} 
+\include{chapter5 }
 
 \include{conclusions}
 
@@ -89,8 +89,8 @@ framexleftmargin=20pt
 \addcontentsline{toc}{chapter}{Bibliography}
 %uncomment next line to change bibliography name to references
 %\renewcommand{\bibname}{References}
+\bibliographystyle{apalike}  %use the plain bibliography style
 \bibliography{refs}        %use a bibtex bibliography file refs.bib
-\bibliographystyle{plain}  %use the plain bibliography style
 
 \end{document}
 

@@ -4,12 +4,13 @@
 % cite it here
 For this internship, we used TV broadcasts downloaded from the internet. 
 \begin{itemize}
-\item The audio files are taken from TV broadcasts. Total duration of audio is around 200 hours.
-\item TV broadcast transcriptions(closed captions) of the audio files are provided. The closed captions are close to what the audio says, but not exactly the same as the speakers of the audio said. In addition to the closed captions from 200 hours TV broadcasts, we have the closed captions from 1600 hours of TV broadcasts as well.
-\item 640 million words of TV subtitles are provided. In addition to that, the 640M subtitles are filtered to avoid overlap with the closed captions from the TV broadcasts.
+\item The audio files are taken from TV broadcasts. Total duration of audio is around 200 hours.  
+\item TV broadcast transcriptions(\textit{closed captions}) of the audio files are provided. The \textit{closed captions} are close to what the audio says, but not exactly the same as the speakers of the audio said.  We call this training set as train.200, containing audio data and the corresponding \textit{closed captions}.
+\item 640 million words of TV subtitles are provided. In addition to that, the 640M subtitles are filtered to avoid overlap with the \textit{closed captions} from the TV broadcasts.
+\item The development set contains around 8 hours of audio data and their corresponding transcriptions. The transcriptions in the development set are closed to what people said in the audio. 
 \end{itemize} 
 
-We prepared two data sets: training set and development set. The training dataset has a total duration of around 200 hours of audio. To evaluate our model, we have a development set. Some metadata are provided in our data, such as: speaker id of the transcript, genre of the show, date and time of the show, as well as television channel where the show was aired. In addition, each segment has start and end time when the segment was shown in the TV broadcast. All files in full training set have closed captions. In contrast, all files in development set have closed captions as well as manually annotated human transcription. The transcript is manually and carefully annotated by human. Thus, the transcript is believed to be the closest transcription spoken by speakers in audio files. 
+We prepared two data sets: training set and development set. The training dataset has a total duration of around 200 hours of audio. To evaluate our model, we have a development set. Some metadata are provided in our data, such as: speaker identity of the transcript, genre of the show, date and time of the show, as well as television channel where the show was aired. In addition, each segment has start and end time when the segment was shown in the TV broadcast. All files in full training set have \textit{closed captions}. In contrast, all files in development set have \textit{closed captions} as well as manually annotated human transcription. The transcript is manually and carefully annotated by human. Thus, the transcript is believed to be the closest transcription spoken by speakers in audio files. 
 
 Table \ref{tab:dataset} shows the statistics of the training set and the development set. The second column represents the number of TV shows in each genre; the third column represents the total duration of each genre. Lastly, the forth column(the last column) shows the total duration of speech when the speakers spoke in the audio.
 \begin{center}
@@ -23,11 +24,11 @@ No & Data set & \#shows & Duration(h) & Aligned speech (h) \\ \hline
 \end{tabular}
 \end{center}
 
- After obtaining 200 hours of data, a 100 hours subset was created by selecting one from two files from 200 training set. The 200 hours and 100 hours training set are named as train.200 and train.100 respectively. 
+ After obtaining about 200 hours of data, a 100 hours subset was created randomly from 200 training set. The 200 hours and 100 hours training set are named as train.200 and train.100 respectively. 
 
 \begin{center}
-\label{statisticstrain200}
 \captionof{table}{Statistics of train.200 per genre}
+\label{statisticstrain200}
 \begin{tabular}{ | c | c | c | c|}
 \hline
 \textbf{Genre} & \textbf{\#shows}  & \textbf{Duration(h)} & Aligned speech(h) \\ \hline \hline
@@ -42,30 +43,33 @@ news & 61 & 42 & 37 \\ \hline
 \end{tabular}
 \end{center}
 
+Table \ref{statisticstrain200} shows that the statistics of our training data. Our data has 8 genres. The second column(from left) shows the number of shows corresponding to their genre; the third columns shows the total audio duration of each genre; the forth column shows the total speech duration. The data with the news genre and events genre  have the most duration and the second most duration respectively. In contrast, the comedy genre data have the least duration.
 
 %Table \ref{statisticstrain200} shows the statistics of each genre in the train.200 training set. 
 
-\section{Experiment setup}
-In this section, we explained how we did the experiments. First, we elaborated how to build language models,  then the acoustic model, and lastly how to decode the data set for the data selection and the model evaluation.
+\section{Experimental setup}
+In this section, we explained how we did the experiments. We elaborated how to build language models,   the acoustic model, and  how to decode the data set for the data selection and the model evaluation.
 
 \subsection{Language model}
 \subsubsection{Library: SRILM}
-SRILM is a toolkit which comprises of a collection of executable programs, which are written in C++, for creating and applying statistical language models for speech recognition and other natural language applications \cite{Stolcke02srilm}. SRILM supports several operations for language model(LM), such as: creating a language model from a text corpus, interpolating several language models into one, pruning a language model, and estimate perplexity of a language model against the test corpus. 
+SRILM is a toolkit  written in C++, for developing statistical language models for speech recognition and other natural language applications \cite{Stolcke02srilm}. SRILM allows creating a language model from a text corpus, interpolating several language models, pruning a language model, and estimating the perplexity of a language model using  test corpus. 
 
-The below code is an example how to make a 4-gram language model with input from $CORPUS$ and interpolated with Kneser-ney interpolation \cite{KneserNey1993}. The syntax is pretty straightforward and easy to understand. The resulted language model will be written in arpa language model format.
+The code bellow is an example how to make a 4-gram language model with input from $CORPUS$ and interpolated with Kneser-ney interpolation \cite{KneserNey1993}. The syntax is pretty straightforward and easy to understand. The resulted language model will be written in arpa language model format.
 \begin{verbatim}
 ngram-count -order 4 -kndiscount -interpolate -sort -text CORPUS -lm LM
 \end{verbatim}
 
 \subsubsection{Implementation}
 \label{3LM}
-This internship experimented with three different kinds of language model for speech recognition. All language models are based on four gram language model. We will describe language model from the most constraint to the less constraint
+This internship experimented with three different kinds of language model for speech recognition. All language models are based on four gram language model. 
+
 \begin{enumerate}
 \item LM.200 \\
-This language model, named as LM.200, was produced from the closed captions of 200 hours training set(train.200). LM.200 was pruned by $10^{-9}$. Pruning means deleting 4 gram sequences which are less than $10^{-9}$.  LM.200 was used for the baseline speech recognizer to select the "good" subset of data.
+This language model, named as LM.200, was produced from the \textit{closed captions} of 200 hours training set(train.200).   LM.200 was used for the baseline speech recognizer to select the "good" subset of data.  Table \ref{statsTrain200} displays the statistics of the language model. The closed caption dataset has 33,914 words. Section \ref{ch3:dataselection} mentions the more constrained language model for the data selection pipeline. In the internship, we utilized LM.200 as the more constrained language model.
 
 \begin{center}
 \captionof{table}{Statistics of LM.200}
+\label{statsTrain200}
 \begin{tabular}{ | c | c | c | }
 \hline
 \textbf{No.} & \textbf{File}  & \textbf{Information} \\ \hline \hline
@@ -74,15 +78,13 @@ This language model, named as LM.200, was produced from the closed captions of 2
  & & bi-gram=402299 \\ 
 & & tri-gram=111868 \\  
 & & 4-gram=64801 \\  \hline
-3 & LM.200.1e-9 & ngram 1=33916 \\  
- & & ngram 2=402299 \\  
-& & ngram 3=98566 \\  
-& & ngram 4=51215 \\  \hline
 \end{tabular}
 \end{center}
 
 \item LM.7weeks+subtitles.limited.1e-9 \\
-A language model was generated from the closed captions of 1600 hours transcription(7weeks TV broadcast closed captions) and interpolated with a language model from the big TV subtitles with ratio 0.9/0.1. The language model was limited by top 160,000 frequent word list and pruned by $10^{-9}$ resulting in LM.7weeks+subtitles.limited.1e-9.  The language model and together with an acoustic model and a lexicon was utilized to compute error rate of the development set.
+A language model was generated from the \textit{closed captions} of 1600 hours transcription(7weeks TV broadcast \textit{closed captions}) and interpolated with a language model from the big TV subtitles with ratio 0.9/0.1. The ratio means that estimation of language model of \textit{closed captions} is multiplied by 0.9, the estimation of big subtitle language model is multiplied by 0.1, and and they are summed together. The language model was limited by top 160,000 frequent word list and pruned by $10^{-9}$ resulting in LM.7weeks+subtitles.limited.1e-9.   Section \ref{ch3:dataselection} mentions the less constrained language model for the evaluation pipeline. In the internship, we utilized  LM.7weeks+subtitles.limited.1e-9  as the less constrained language model.
+
+
 
 \begin{center}
 \begin{tabular}{ | c | c | c | }
@@ -113,7 +115,7 @@ A language model was generated from the closed captions of 1600 hours transcript
 \end{center}
 
 \item LM.genres \\
-Eight language models were generated from each genre(LM.documentary, LM.news, LM.events, LM.drama, LM.competition, LM.comedy, LM.children, and LM.advice). Then, each language model was interpolated with the big subtitle LM with  ratio 0.9/0.1, limited by the top 160,000 word list, and pruned by $10^{-9}$ threshold. The language model was used in the new proposed algorithm only.
+Eight language models were generated from each genre(LM.documentary, LM.news, LM.events, LM.drama, LM.competition, LM.comedy, LM.children, and LM.advice). Then, each language model was interpolated with the big subtitle LM with  ratio 0.9/0.1, limited by the top 160,000 word list, and pruned by $10^{-9}$ threshold. The language model was used in the new proposed data selection only. To build language models, we utilized SRILM.
 
 \begin{center}
 \begin{tabular}{ | c | c | c | }
@@ -156,24 +158,22 @@ ngram 3=154416 \\
 
 \end{enumerate}
 
-To build language models we mentioned before, we utilized SRILM. In addition to building language models, SRILM is able to interpolate several language models, limit vocabularies of a language models, prune a language model by a threshold, and many more.
+
 
 
 \subsection{Acoustic model}
 \subsubsection{Library: Kaldi}
-Kaldi is a toolkit, written in C++, which comprises several tools which are useful to experiment and build a speech recognition system \cite{PoveyASRU2011}. Kaldi supports several operations to build a speech recognition system, such as: extracting feature vectors, acoustic modeling, training acoustic models, and creating decoding graph as well as decoding audio inputs into lattices. Kaldi provides several features, such as:
+Kaldi is a toolkit, written in C++, which comprises several tools to experiment and build a speech recognition system \cite{PoveyASRU2011}. Kaldi supports several operations to build a speech recognition system, such as: extracting feature vectors, acoustic modeling, training acoustic models, and creating decoding graph as well as decoding audio inputs into lattices. Kaldi provides several features, such as:
 \begin{itemize}
-\item It support finite state transducer(FST), which is based on OpenFST library. The FST is used to build a decoding graph with the inputs of acoustic model, language model, and lexicon.
+\item It supports finite state transducer(FST), which is based on OpenFST library. The FST is used to build a decoding graph with the inputs of acoustic model, language model, and lexicon.
 \item It is extensible and provides complete recipes. Kaldi gives many recipes to build acoustic model, such as: gaussian mixture model, deep neural network, etc.
-\item It supports linear algebra and utilizes the standard linear algebra library: BLAS and LAPACK.
-\item It has been tested thoroughly to ensure the quality of the library.
 \end{itemize}
 
 \subsubsection{Acoustic model implementation}
 %GMM
-Before training the DNN acoustic model, GMM-HMM must be trained first. GMM-HMM is able to perform force alignment on the flat start(without phoneme-to-audio alignment). The labeling of each acoustic input is compulsory to train the TDNN acoustic model. 
+%Before training the DNN acoustic model, GMM-HMM must be trained first. GMM-HMM is able to perform force alignment on the flat start(without phoneme-to-audio alignment). The labeling of each acoustic input is compulsory to train the TDNN acoustic model. 
 
-We utilized TED-LIUM's recipe(nnet3 in Kaldi) to train the TDNN acoustic model. The feature vector is extracted with MFCC, consisting of 40 feature values. The TDNN architecture has 6 hidden layers, where each hidden unit  utilizes rectified linear unit(RELU) activation function. The TDNN outputs around 9000 output nodes with softmax activation function. Moreover, the TDNN architecture is implemented by leveraging the subsampling technique. Table shows the parameters and subsampling splice configuration we used in the architecture.
+We utilized TED-LIUM's recipe(nnet3 in Kaldi) to train the TDNN acoustic model. The feature vectors are MFCC, consisting of 40 feature values. The TDNN architecture has 6 hidden layers, where each hidden unit  utilizes rectified linear unit(RELU) activation function. The TDNN outputs around 9000 output nodes with softmax activation function. Moreover, the TDNN architecture is implemented by leveraging the subsampling technique. Table shows the parameters and subsampling splice configuration we used in the architecture.
 
 \begin{center}
 \captionof{table}{Parameters of  theTDNN acoustic model}
@@ -203,22 +203,38 @@ layer 6 & $t$ \\  \hline
 % -training
 
 \subsection{Recognition}
-The last step after training an acoustic model and building a language model is to recognize a data set. The recognition is useful for data selection(computing the new word error rate as well as phone error rate ) and evaluate how good our data selection is. In overall, the recognition(or decoding) process works as following:
+After training the acoustic models and building the language models, we recognize a data set. The recognition is useful for data selection(computing the new word error rate as well as phone error rate ) and evaluate how good our data selection is. In overall, the recognition(or decoding) process works as following:
 \begin{enumerate}
-\item Create a decoding graph from an acoustic model, a language model, and a lexicon. In Kaldi's implementation, it transforms the  acoustic model, the language model, and the lexicon into a weighted finite state transducer(WFST).
-\item Decode the dataset by using the WFST. In Kaldi, the decoding process will result in a lattice. Lattice is a decoding graph which represents some variants of the recognition. Providing only one best recognition is not practical; thus lattice is the way to represent the recognition/decoding result. 
-\item Compute the best path of word or phone in the lattice and calculate the WER as well as PER. Kaldi produces two ctm files(word and phone ctm files) which are the best decoding results which the algorithm can obtain. The ctm file consists of words(or phone) in the transcription with its start and end time relative to the audio. By utilizing sclite, the ctm file(the hypothesized word/phone from the ASR) is compared with the transcriptions(the closed captions or the detailed transcription). Then, the code matches and computes the minimum edit distance to calculate the error rate.
+\item Create a decoding graph from the acoustic model, the language model, and the lexicon. In Kaldi's implementation, it transforms the  acoustic model, the language model, and the lexicon into a weighted finite state transducer(WFST).
+\item Decode the dataset using the WFST. In Kaldi, the decoding process will result in a lattice. Lattice is a decoding graph which represents some variants of the recognition. Providing only one best recognition is not practical; thus lattice is the way to represent the recognition/decoding result. 
+\item Compute the best path of words or phones in the lattice and calculate the WER as well as PER. Kaldi produces two ctm files(word and phone ctm files) which are the best decoding results which the algorithm can obtain. The ctm file consists of words(or phone) in the transcription with its start and end times relative to the audio. 
+
+Sclite is a tool for evaluating and scoring the output of speech recognition systems. By utilizing sclite, the ctm file(the hypothesized word/phone from the ASR) is compared with the transcriptions(the \textit{closed captions} or the detailed transcription) and the error rate is calculated.  
 \end{enumerate}
 
 \subsubsection{Data Selection}
-To select the good data for the next iteration, the new matched word and phone error rate must be generated from the training set. By running the recognition steps(as explained above) on the training set and comparing the decoding result with the closed captions, a file(the file with the extension of ".prf") is generated. The file contains the number of insertion, deletion, and substitution. By using the error rate equation as bellow, the new matched error rate(WMER and PMER) are computed. 
+To select the good data for the next iteration, we need to re-recognize the training set and calculate the new value of matched word phone matched error rate, and average word duration. Here are the steps for computing the value of PMER and WMER:
+\begin{enumerate}
+\item Recognize the training set with the trained acoustic model, the language model, and the lexicon. This will result new decoding transcriptions.
+\item By utilizing sclite, we can compare the \textit{closed captions} and decoding transcriptions. After comparing, sclite automatically generates the numbers of correct words, insertions, deletions, and substitutions which is written in a file with extension ".prf". Figure \ref{prf} illustrates a segment with its corresponding \textit{closed caption} and decoding transcription.  REF represents the closed caption, while HYP represents the decoding transcription. After knowing the number of correct words, insertions, deletions, and substitutions, the values of PMER, WMER, and AWD can be computed.
 
-Firstly, the segments are sorted based on the new PMER. Secondly, choose the top 100 hour segments based on the PMER. These selected segments are used for the next iteration. 
+\begin{figure}[H]
+\caption{The example}
+\label{prf}
+\includegraphics[scale=0.5]{prf} 
+\centering
+\end{figure}
+
+\item After computing the new value of PMER, WMER, and AWD for each segment, we select segments with AWD in the range of $0.165 \leq AWD \leq 0.66$ and then sort the selected data based on PMER. We only choose top 100 hours data which has the lowest PMER.
+
+\end{enumerate} 
+
+
 
 \subsubsection{Evaluation}
-To evaluate how good our data selection is, we need to evaluate the automatic speech recognizer(especially the acoustic model). In every iteration, we train an acoustic model; furthermore, the acoustic model and together with the language model(LM.7weeks+subtitles.limited.1e-9) as well as the lexicon, we recognize the development set. After decoding and computing WER of development set, we compare the WER with the previous iteration. If the new WER is lower, we can continue the iteration; otherwise, stop the iteration. 
+To evaluate how good our data selection is, we need to evaluate the automatic speech recognizer. In every data selection iteration, we train an acoustic model, build a speech recognizer (with the acoustic model, the language model(LM.7weeks+subtitles.limited.1e-9), as well as the lexicon),  and recognize the development set. After decoding and computing WER of development set, we compare the WER with the previous iteration. If the new WER is lower, we can continue the iteration; otherwise, stop the iteration. 
 
-\subsubsection{Experiments}
+%\subsubsection{Experiments}
 
 \section{Experiment resources}
 To run our experiment, we utilized grid 5000 server cluster. Grid 5000 is a computing cluster with a focus on parallel and distributed computing \cite{Grid5000}. It has several key features:
@@ -233,7 +249,7 @@ The following is the description of resources which we leveraged for this intern
 \item Train acoustic models: 1 computer with GPU and 8 computers without GPU. At least one computer with GPU is compulsory because we can harness GPU to parallelization the computation of DNN training. 
 \item Create decoding graph only needs one computer because the Kaldi recipe does not need parallelization for this process.
 \item Decoding the ASR leverages 20 computers. Usually one computer can recognize one hour of audio within one hour. Therefore, the more computer we use, the faster the decoding process will be. 
-\item Lastly, the error rate computation and data selection process only utilizes one computer. 
+\item The error rate computation and data selection process only utilizes one computer. 
 \end{enumerate}
 % server
 % exectution time

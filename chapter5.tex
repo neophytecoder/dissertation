@@ -1,30 +1,20 @@
 \chapter{Experiment result}
 
 \section{Baseline model}
-The data selection was run four time until it saturates in iteration number 3. Basically, the data selection works as following: train a TDNN acoustic model(AM) on 100 hour randomly selected training set(with closed caption), recognize the training set using the new acoustic model and compute new phone matched error rate, reject segments(utterances) which are not in the AWD range($0.165 \leq AWD \leq 0.66$), sort and select new data based on the lowest phone matched error rate. To evaluate how good the data selection is, the acoustic model and together with the language model as well as lexicon must recognize the development set and compute word error rate. If the word error rate decreases, the iteration can continue; otherwise, stop the iteration.
+%In ourThe data selection was run four time until it does in iteration number 3. 
+As presented in the previous chapters, the baseline data selection works as following:
+\begin{enumerate}
+\item train a GMM-HMM and then TDNN acoustic model(AM) on 100 hour randomly selected training set(with closed caption)
+\item recognize the training set using this acoustic model 
+\item compute  phone matched error rate and average word duration
+\item reject segments(utterances) which does not satisfy the AWD range($0.165 \leq AWD \leq 0.66$)
+\item sort and select new data based on the lowest phone matched error rate. Retrain an acoustic model using the selected data. Repeat steps 1-5.
+\end{enumerate}
+To evaluate how good the data selection is, we recognize the development set and compute word error rate. If the word error rate decreases, the iteration can continue; otherwise, stop the iteration.
 
-Chart \ref{awd} shows the average word duration of iteration 0, 1, and 2. The X-axis is the value of average word duration, while the Y-axis represents the cumulative duration of audio in percentage. All utterances are sorted based on AWD to draw this chart. Two vertical line represents boundaries to select utterances. The utterances which are inside these two lines(the value of AWD is in the range $0.165 \leq AWD \leq 0.66$) will be selected. The result shows that less than 15\% data are rejected. Selection by using AWD is important to reject utterances which are badly aligned.
+Figure \ref{awd} shows the average word duration of data selection iteration 0, 1, and 2. The X-axis is the value of average word duration, while the Y-axis represents the cumulative duration of audio in percentage. All utterances are sorted based on AWD to draw this figure. Two vertical line represents boundaries to select utterances. The utterances which are inside these two lines(the value of AWD is in the range $0.165 \leq AWD \leq 0.66$) will be selected. The result shows that less than 15\% data are rejected. Selection by using AWD is important to reject utterances which are badly aligned.
 
-Chart  \ref{pmer} demonstrates the phone matched error rate of all iterations. The X-axis and Y-axis represent the value of PMER of each utterance and the duration of audio in percentage respectively. All utterances are sorted based on PMER to generate this chart. It is obvious to see that the next iteration has more zero PMER compared to the previous iteration. Moreover, the value of PMER decreases slightly over several iterations where more and more utterances have less PMER in the next iteration. Nevertheless, the iteration stops in iteration three because the data selection converges(no further improvement in PMER).
-
-Table \ref{tab:werper} shows the result of the experiments. Baseline 0(row 1)  is the initial iteration(iteration 0) where the training set is randomly 100 hours from 200 hours of training set. Row number 2-4 are the next iteration. 
-
-Baseline decoding(row 2) utilizes the audio data and the decoding results(in place of the closed captions) of the previous iteration(baseline 0) as the new training set. Baseline WMER(row 3) and baseline 1(row 4) use the audio data and the closed captions(with new PMER and AWD) as the new training set. However, baseline WMER sorts utterances based on WMER instead of PMER. In contrast, baseline 1 utilized the same method as described in \ref{ch3:dataselection}. Consequently, using closed captions and sorting by PMER are the best; thus, the next iteration only experiments with closed captions as training set and sorting by PMER. Baseline 2 and 3 are the second and third(last) iteration respectively. They have the same value of WER; hence, the iteration stops because the data selection has converged.
-
-\begin{figure}
-\caption{Average word duration of the iteration}
-\label{awd}
-\includegraphics[scale=0.7]{awd} 
-\centering
-\end{figure}
-
-\begin{figure}
-\caption{Phone matched error rate of the iteration}
-\label{pmer}
-\includegraphics[scale=0.7]{pmer} 
-\centering
-\end{figure}
-
+Figure  \ref{pmer} demonstrates the phone matched error rate of all iterations. The X-axis and Y-axis represent the value of PMER of each utterance and the duration of audio in percentage respectively. All utterances are sorted based on PMER to generate this figure. The value of PMER decreases slightly over several iterations where more and more utterances have less PMER in the next iteration. Nevertheless, the iteration stops in iteration three because the data selection converges(no further improvement in PMER).
 
 \begin{center}
 \label{tab:werper}
@@ -40,6 +30,35 @@ No. & Model & WER(\%) & PER(\%) & PMER thresh(\%) \\ \hline
 6 & baseline 3 & 40.5 & 33.3  &  \\ \hline
 \end{tabular}
 \end{center}
+
+Table \ref{tab:werper} shows the result of the recognition experiments. The second column denotes the model name; the third and forth represents the value of WER and PER respectively of the corresponding model. The last column shows the PMER threshold. When we finish building a speech recognizer, we recognize the train.200 training set and select 100 hours data for the next iteration. The selection is thresholded by PMER threshold, shown in the last column.
+
+\begin{itemize}
+\item Baseline 0(row 1)  is the initial data selection iteration(iteration 0) where the training set is randomly 100 hours selection from 200 hours of training set. We evaluated baseline 0 which resulted in $43.9\%$ WER and $35.8\%$ PER. Then, we re-recognize train.200 and selected top 100 hours data with PMER threshold $36\%$.
+\item Baseline decoding(row 2) utilizes the audio data and the decoding results(in place of the closed captions) of the previous iteration(baseline 0) as the new training set.
+\end{itemize}
+
+
+ Baseline WMER(row 3) and baseline 1(row 4) use the audio data and the closed captions(with new PMER and AWD) as the new training set. However, baseline WMER sorts utterances based on WMER instead of PMER. In contrast, baseline 1 utilized the same method as described in \ref{ch3:dataselection}. Consequently, using closed captions and sorting by PMER are the best; thus, the next iteration only experiments with closed captions as training set and sorting by PMER. Baseline 2 and 3 are the second and third(last) iteration respectively. They have the same value of WER; hence, the iteration stops because the data selection has converged.
+
+
+
+\begin{figure}
+\caption{Average word duration of data selection iterations}
+\label{awd}
+\includegraphics[scale=0.7]{awd} 
+\centering
+\end{figure}
+
+\begin{figure}
+\caption{Phone matched error rate of the iteration}
+\label{pmer}
+\includegraphics[scale=0.7]{pmer} 
+\centering
+\end{figure}
+
+
+
 
 \section{Proposed models}
 
@@ -90,7 +109,7 @@ No.  & model name & WER(\%) & PER(\%) \\ \hline
 
 \section{Execution time}
 
-Table \ref{tab:exectime} shows the execution time of each iteration. The most demanding process is to train an acoustic model. Furthermore, the second most demanding process is to recognize the full training set and select  a good subset of data from it. This is time consuming due to a massive volume of training data(around 200 hours of TV broadcasts). In overall, the execution time of each iteration roughly takes 43 hours. 
+Table \ref{tab:exectime} shows the execution time of each data selection iteration. The most demanding process is to train an acoustic model. The second most demanding process is to recognize the full training set and select  a good subset of data from it. This is time consuming due to a massive volume of training data(around 200 hours of TV broadcasts). In overall, the execution time of each iteration roughly takes 43 hours. 
 
 \begin{center}
 \label{tab:exectime}
@@ -107,15 +126,15 @@ Itera & Train & Recognize \&  & Calculate & Decoding graph  & Decoding graph  & 
 \section{Discussion}
 This chapter provides the results of experiments of baseline and proposed approaches. In this section, we give a summary of our experiments and offer possible explanations for the obtained results.
 
-In baseline model, we showed a chart of PMER(see \ref{pmer}) produced by four iteration baseline models. The chart shows that the next iteration obtains more segments with zero PMER and lower PMER. The value of PMER decreases slightly in each iteration until it converges in the last iteration(iteration 2 and 3). The reason behind this is the data selection method has converged in Baseline 2. Furthermore, we compared the selected segments for training Baseline 2 and 3. They have the same subset of selected segments/utterances(with slightly reduced PMER values in Baseline 3) which explains why they have almost the same PMER.
+In baseline model, we showed a chart of PMER(see \ref{pmer}) produced by four iteration baseline models. The chart shows that the next iteration obtains more segments with zero PMER and lower PMER. The value of PMER decreases slightly in each iteration until it converges in the last iteration(iteration 2 and 3). The reason behind this is the data selection method has converged in Baseline 2. Furthermore, we compared the selected segments for training Baseline 2 and 3. They have exactly the same subset of selected segments/utterances(with slightly reduced PMER values in Baseline 3).
 
 In addition to comparing PMER in the cumulative chart, we also evaluate each baseline model by computing word error rate of the development set. We did four iterations(baseline 0, 1, 2, and 3). The WER of the baseline model keeps decreasing in each iteration. In other word, we has shown that the data selection technique(inspired from \cite{Lanchantin2016}) works well in our data. Model baseline 2 and 3 have the same WER which denotes that the data selection has converged. Moreover, we experimented by modifying the baseline technique. 
 
 The first modification is we tried to use the decoding result as the training set for the next iteration. The result is not as good as using our original technique(using closed captions as the training set). The intuition of the bad performance is the PER of baseline 0 is 35.8\%; i.e. around 1 from 3 phones are incorrectly recognized. Therefore, the decoding result may be more terrible than the real transcriptions or even more terrible than the closed captions. The second modification is we tried to sort the segments by WMER in place of PMER. The result is worse than the baseline method. This is because we train an acoustic model which predicts sub phones(senone) from the acoustic inputs. Therefore, sorting by PMER is more likely to produce a better acoustic model(and of course better ASR because we use the same language model and lexicon) than sorting by WMER.
 
-Beside the baseline model, we experimented with three different proposed models. The idea behind the proposed models is by combining three different ASRs(the same acoustic model but different language models). The first proposed model is by averaging PMER and AWD and do data selection the same as the baseline method. The result is slightly worse than the baseline. The second proposed model is by combining the recognition of three ASRs by the algorithm proposed in Listing \ref{algoCombine}. We obtained slightly better PER and exactly the same value of WER compared to Baseline 2. Thus, we continued the iteration which resulted in the bad performance model. The reasoning is our combination algorithm tried to fix the closed captions by replacing with the decoding results if two ASRs agree. We hypothesize that our three ASRs are not different because we only utilize different language models(built with somewhat the same text corpus) and the same acoustic model. Therefore, if one ASR makes a mistake, the other probably makes the same mistake. The last proposed model is to recognize  randomly different training set for each iteration and do data selection from the training set. The first iteration shows better model than Baseline 2. However, the second iteration performs slightly worse than Baseline 2. We believe there is a luck factor in selecting the random training set. If the randomly selected set is well chosen, we obtain a better model; otherwise, the model will perform poorer. 
+Beside the baseline model, we experimented with three different proposed models. The idea behind the proposed models is by combining three different ASRs(the same acoustic model but different language models). The first proposed model is by averaging PMER and AWD and do data selection the same as the baseline method. The result is slightly worse than the baseline. The second proposed model is by combining the recognition of three ASRs by the algorithm proposed in Listing \ref{algoCombine}. We obtained slightly better PER and exactly the same value of WER compared to Baseline 2. Thus, we continued the iteration which resulted in the bad performance model. The reasoning is our combination algorithm tried to fix the closed captions by replacing with the decoding results if two ASRs agree. We hypothesize that our three ASRs are not really different because we only utilize different language models(built with somewhat the same text corpus) and the same acoustic model. Therefore, if one ASR makes a mistake, the other probably makes the same mistake. The last proposed model is to recognize  randomly different training set for each iteration and do data selection from the training set. The first iteration shows better model than Baseline 2. However, the second iteration performs slightly worse than Baseline 2. We believe there is a luck factor in selecting the random training set. If the randomly selected set is well chosen, we obtain a better model; otherwise, the model will perform poorer. 
 
-In conclusion, we have experimented with the baseline model and we also proposed some methods. However, our proposed method does not work as well as we expected. The main reason behind it is we do not use and combine highly different automatic speech recognitions. Instead, we used the same acoustic model and three different language models, which are built from somewhat the same corpus. Therefore, it is necesarry to experiment and investigate more the combination of totally different acoustic model(trained on different architecture, different acoustic input, etc) and totally different language model(different text corpus, different parameters, etc). Due to the limited time constraint of the internship(the execution time of one iteration is long, see \ref{tab:exectime}), we do not have much opportunity to experiment further.
+In conclusion, we have experimented with the baseline model and we also proposed some methods. However, our proposed method does not work as well as we expected. The main reason behind it is we do not use and combine highly different automatic speech recognitions. Instead, we used the same acoustic model and three different language models, which are built from somewhat the same corpus. Therefore, it is necesarry to experiment and investigate more the combination of totally different acoustic model(trained on different architecture, different acoustic input, etc) and totally different language model(different text corpus, different parameters, etc). Due to the limited time constraint of the internship(the execution time of one iteration is long, see \ref{tab:exectime}), we do not have opportunity to experiment and investigate further.
 
 
 

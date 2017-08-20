@@ -1,7 +1,6 @@
 This is BibTeX, Version 0.99d (TeX Live 2016)
 Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: ociamthesismain.aux
-A level-1 auxiliary file: dedication.aux
 A level-1 auxiliary file: acknowlegements.aux
 A level-1 auxiliary file: abstract.aux
 A level-1 auxiliary file: chapter1.aux
@@ -10,10 +9,9 @@ A level-1 auxiliary file: chapter3.aux
 A level-1 auxiliary file: chapter4.aux
 A level-1 auxiliary file: chapter5.aux
 A level-1 auxiliary file: conclusions.aux
-The style file: plain.bst
+The style file: apalike.bst
 Database file #1: refs.bib
 Warning--empty year in Chan
-Warning--empty year in Kemp_unsupervisedtraining
 Warning--empty journal in lightlySupervised
 Warning--empty year in Mathias
 Warning--empty booktitle in Renals1994
@@ -21,45 +19,45 @@ Warning--can't use both volume and number fields in Renals1994
 Warning--empty booktitle in Stolcke02srilm
 Warning--empty booktitle in Waibel:1990:PRU:108235.108263
 Warning--empty booktitle in Zavaliagkos1998UtilizingUT
-You've used 39 entries,
-            2118 wiz_defined-function locations,
-            759 strings with 12179 characters,
-and the built_in function-call counts, 14267 in all, are:
-= -- 1348
-> -- 765
-< -- 10
-+ -- 308
-- -- 262
-* -- 980
-:= -- 2310
-add.period$ -- 131
-call.type$ -- 39
-change.case$ -- 246
-chr.to.int$ -- 0
-cite$ -- 48
-duplicate$ -- 565
-empty$ -- 1146
-format.name$ -- 262
-if$ -- 3033
-int.to.chr$ -- 0
-int.to.str$ -- 39
+You've used 41 entries,
+            1935 wiz_defined-function locations,
+            748 strings with 12093 characters,
+and the built_in function-call counts, 17047 in all, are:
+= -- 1671
+> -- 749
+< -- 32
++ -- 268
+- -- 254
+* -- 1345
+:= -- 2903
+add.period$ -- 137
+call.type$ -- 41
+change.case$ -- 330
+chr.to.int$ -- 41
+cite$ -- 49
+duplicate$ -- 719
+empty$ -- 1204
+format.name$ -- 321
+if$ -- 3418
+int.to.chr$ -- 1
+int.to.str$ -- 0
 missing$ -- 37
-newline$ -- 197
-num.names$ -- 78
-pop$ -- 346
+newline$ -- 208
+num.names$ -- 123
+pop$ -- 388
 preamble$ -- 1
-purify$ -- 209
+purify$ -- 332
 quote$ -- 0
-skip$ -- 374
+skip$ -- 479
 stack$ -- 0
-substring$ -- 652
-swap$ -- 136
+substring$ -- 981
+swap$ -- 109
 text.length$ -- 10
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 152
-warning$ -- 9
-while$ -- 117
-width$ -- 41
-write$ -- 416
-(There were 9 warnings)
+type$ -- 242
+warning$ -- 8
+while$ -- 123
+width$ -- 0
+write$ -- 523
+(There were 8 warnings)

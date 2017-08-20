@@ -1,16 +1,18 @@
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {1.1}{\ignorespaces automatic speech recognition\relax }}{1}
+\contentsline {figure}{\numberline {1.1}{\ignorespaces Automatic speech recognition \cite {ASRImage}\relax }}{1}
 \addvspace {10\p@ }
 \contentsline {figure}{\numberline {2.1}{\ignorespaces A triphone HMM model consisting of three emitting states(beginning(S0), middle(S1), and end(S2) of a phone), a transition matrix $A$, and emission probability(observation likelihood) $B$ \cite {SiliconAM}\relax }}{9}
-\contentsline {figure}{\numberline {2.2}{\ignorespaces A perceptron\relax }}{10}
-\contentsline {figure}{\numberline {2.3}{\ignorespaces Multi layer perceptron\relax }}{11}
+\contentsline {figure}{\numberline {2.2}{\ignorespaces A perceptron \cite {perceptronImage}\relax }}{10}
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Multi layer perceptron \cite {perceptronImage}\relax }}{11}
 \contentsline {figure}{\numberline {2.4}{\ignorespaces An example of a TDNN architecture. \cite {Peddinti2015ATD}\relax }}{12}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {3.1}{\ignorespaces Evaluation pipeline\relax }}{21}
-\contentsline {figure}{\numberline {3.2}{\ignorespaces Data selection pipeline\relax }}{22}
-\contentsline {figure}{\numberline {3.3}{\ignorespaces Training and decoding with the speech recognition system\relax }}{24}
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Training and decoding with the speech recognition system\relax }}{20}
+\contentsline {figure}{\numberline {3.2}{\ignorespaces An illustration of lattice \cite {Gales:2007:AHM:1373536.1373537}\relax }}{21}
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Data selection pipeline\relax }}{23}
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Evaluation pipeline\relax }}{25}
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces The example\relax }}{34}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {5.1}{\ignorespaces Average word duration of the iteration\relax }}{36}
-\contentsline {figure}{\numberline {5.2}{\ignorespaces Phone matched error rate of the iteration\relax }}{37}
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Average word duration of data selection iterations\relax }}{38}
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Phone matched error rate of the iteration\relax }}{39}
 \addvspace {10\p@ }
